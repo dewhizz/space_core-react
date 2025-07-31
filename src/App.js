@@ -6,6 +6,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import { BrowserRouter as Router, Routes,Route } from 'react-router-dom';
 import RegisterComponent from './components/RegisterComponent';
 import HomeComponent from './components/HomeComponent';
+import LoginComponent from './components/LoginComponent';
+import NotFound from './components/NotFound';
 
 function App() {
   return (
@@ -13,6 +15,10 @@ function App() {
     <Routes>
       <Route path='/' element={<HomeComponent/>}/>
       <Route path='/register' element={<RegisterComponent/>}/>
+      <Route path='/login' element={<LoginComponent/>}/>
+      
+      {/* constrains */}
+      <Route path='*' element={<NotFound/>}/>
     </Routes>
    </Router>
   );
