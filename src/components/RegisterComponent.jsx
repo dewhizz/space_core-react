@@ -25,7 +25,7 @@ const RegisterComponent = () => {
         // this is what we intend to send
         const data={name,email,password,phone}
         // axios-used to make http requests 
-        const res=await axios.post(  "https://school-api-fexk.onrender.com/api/user/Auth/register",data)
+        const res=await axios.post( "https://space-core.onrender.com/user/Auth/register",data)
         console.log('registration',data)
         if(res.data.newUser){
           setLoading('')
