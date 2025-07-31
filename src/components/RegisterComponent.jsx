@@ -8,6 +8,7 @@ const RegisterComponent = () => {
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
     const [phone,setPhone]=useState('')
+    const [secretKey, setSecretKey]=useState('')
 
     // user interaction
     const [error,setError]=useState('')
@@ -23,10 +24,10 @@ const RegisterComponent = () => {
 
       try {
         // this is what we intend to send
-        const data={name,email,password,phone}
+        const data={name,email,password,phone,secretKey}
         // axios-used to make http requests 
         const res=await axios.post( "https://space-core.onrender.com/user/Auth/register",data)
-        console.log('registration',data)
+        console.log('registration',res.data)
         if(res.data.newUser){
           setLoading('')
           setSuccess(res.data.message)
@@ -49,6 +50,11 @@ const RegisterComponent = () => {
         <h1 className='text-center text-danger'><b>Space Core</b></h1>
         <h2 className='text-center text-success'>Register</h2>
 
+        {/* alerts  */}
+        {error? <div className='alert alert-danger'>{error}</div>:null}
+        {success? <div className='alert alert-success'>{success}</div>:null}
+        {loading? <div className='alert alert-info'>{}loading</div>:null}
+
         {/* inputs */}
         <label className='text-muted'><b>Name</b></label>
         <input type="text" className="form-control mb-3" value={name} onChange={(e)=> setName(e.target.value)} required/>
@@ -65,6 +71,10 @@ const RegisterComponent = () => {
          <label className='text-muted'><b>Phone</b></label>
         <input type="phone" className='form-control mb-3'  value={phone} onChange={(e)=>setPhone(e.target.value)} required />
         {phone}
+
+         <label className='text-muted'><b>secretKey</b></label>
+        <input type="password" className='form-control mb-3'  value={secretKey} onChange={(e)=>setSecretKey(e.target.value)} required />
+        {secretKey}
         <div className="d-grid mb-3">
           <button type='submit' className='btn btn-dark'>Register</button>
         </div>
