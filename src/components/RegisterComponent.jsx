@@ -7,7 +7,7 @@ const RegisterComponent = () => {
     const [name,setName]=useState('')
     const [email,setEmail]=useState('')
     const [password,setPassword]=useState('')
-    const [phone,setPhone]=useState('')
+    // const [phone,setPhone]=useState('')
     const [secretKey, setSecretKey]=useState('')
 
     // user interaction
@@ -24,7 +24,7 @@ const RegisterComponent = () => {
 
       try {
         // this is what we intend to send
-        const data={name,email,password,phone,secretKey}
+        const data={name,email,password,secretKey}
         // axios-used to make http requests 
         const res=await axios.post( "https://space-core.onrender.com/user/Auth/register",data)
         console.log('registration',res.data)
@@ -45,45 +45,97 @@ const RegisterComponent = () => {
       }
     }
   return (
-   <div className="container mt-5" style={{maxWidth:'500px'}}>
-    <form onSubmit={handleSubmit} className='card shadow p-4 bg-light rounded'>
-        <h1 className='text-center text-danger'><b>Space Core</b></h1>
-        <h2 className='text-center text-success'>Register</h2>
+    <div className="container mt-5" style={{ maxWidth: "500px" }}>
+      <form
+        onSubmit={handleSubmit}
+        className="card shadow p-4 bg-light rounded"
+      >
+        <h1 className="text-center text-danger">
+          <b>Space Core</b>
+        </h1>
+        <h2 className="text-center text-success">Register</h2>
 
         {/* alerts  */}
-        {error? <div className='alert alert-danger'>{error}</div>:null}
-        {success? <div className='alert alert-success'>{success}</div>:null}
-        {loading? <div className='alert alert-info'>{}loading</div>:null}
+        {error ? <div className="alert alert-danger">{error}</div> : null}
+        {success ? <div className="alert alert-success">{success}</div> : null}
+        {loading ? <div className="alert alert-info">{loading}</div> : null}
 
         {/* inputs */}
-        <label className='text-muted'><b>Name</b></label>
-        <input type="text" className="form-control mb-3" value={name} onChange={(e)=> setName(e.target.value)} required/>
+        <label className="text-muted">
+          <b>Name</b>
+        </label>
+        <input
+          type="text"
+          className="form-control mb-3"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
         {name}
 
-        <label className='text-muted'><b>Email</b></label>
-        <input type="email" className='form-control mb-3' value={email} onChange={(e)=>setEmail(e.target.value)} required />
+        <label className="text-muted">
+          <b>Email</b>
+        </label>
+        <input
+          type="email"
+          className="form-control mb-3"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
         {email}
 
-        <label className='text-muted'><b>Password</b></label>
-        <input type='password' className='form-contol mb-3' value={password} onChange={(e)=>setPassword(e.target.value)} required />
+        <label className="text-muted">
+          <b>Password</b>
+        </label>
+        <input
+          type="password"
+          className="form-contol mb-3"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
         {password}
 
-         <label className='text-muted'><b>Phone</b></label>
-        <input type="phone" className='form-control mb-3'  value={phone} onChange={(e)=>setPhone(e.target.value)} required />
-        {phone}
+        {/* <label className="text-muted">
+          <b>Phone</b>
+        </label>
+        <input
+          type="phone"
+          className="form-control mb-3"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+          required
+        />
+        {phone} */}
 
-         <label className='text-muted'><b>secretKey</b></label>
-        <input type="password" className='form-control mb-3'  value={secretKey} onChange={(e)=>setSecretKey(e.target.value)} required />
+        <label className="text-muted">
+          <b>secretKey</b>
+        </label>
+        <input
+          type="password"
+          className="form-control mb-3"
+          value={secretKey}
+          onChange={(e) => setSecretKey(e.target.value)}
+          required
+        />
         {secretKey}
         <div className="d-grid mb-3">
-          <button type='submit' className='btn btn-dark'>Register</button>
+          <button type="submit" className="btn btn-dark">
+            Register
+          </button>
         </div>
         <div className="text-center">
-          <p>Already have an account? <Link to='/login' className='text-decoration-none'>Login</Link></p>
+          <p>
+            Already have an account?{" "}
+            <Link to="/login" className="text-decoration-none">
+              Login
+            </Link>
+          </p>
         </div>
-    </form>
-   </div>
-  )
+      </form>
+    </div>
+  );
 }
 
 export default RegisterComponent

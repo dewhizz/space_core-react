@@ -9,7 +9,7 @@ const LoginComponent=()=>{
 
     const [error,setError]=useState('')
     const [loading,setLoading]=useState('')
-    const navigate=useNavigate
+    const navigate=useNavigate()
 
     const handleSubmit=async(e)=>{
         e.preventDefault()
