@@ -8,6 +8,7 @@ import RegisterComponent from './components/RegisterComponent';
 import HomeComponent from './components/HomeComponent';
 import LoginComponent from './components/LoginComponent';
 import NotFound from './components/NotFound';
+import NotAuthorized from './components/NotAuthorized';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       
       {/* constrains */}
       <Route path='*' element={<NotFound/>}/>
+      <Route path='/not-authorized' element={<NotAuthorized/>}/>
     </Routes>
    </Router>
   );

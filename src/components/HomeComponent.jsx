@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const HomeComponent = () => {
   return (
-    <div className="homepage">
+    <div className="homepage ">
       {/* navbar */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-success">
         <div className="container">
@@ -54,7 +54,7 @@ const HomeComponent = () => {
       </nav>
 
       {/* here section */}
-      <section className="hero position-relative text-white">
+      <section className="hero position-relative text-white m-3">
         <img
           src="/images/banner.jpg"
           alt="banner"
