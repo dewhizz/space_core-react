@@ -21,6 +21,7 @@ const LoginComponent=()=>{
             setLoading('')
             console.log(res.data)
             
+            
         } catch (error) {
             setLoading('')
             setError(error.message)

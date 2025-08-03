@@ -9,6 +9,8 @@ import HomeComponent from './components/HomeComponent';
 import LoginComponent from './components/LoginComponent';
 import NotFound from './components/NotFound';
 import NotAuthorized from './components/NotAuthorized';
+import UserDashBoard from './components/user/UserDashBoard';
+import AboutUs from './components/AboutUs';
 
 function App() {
   return (
@@ -17,7 +19,10 @@ function App() {
       <Route path='/' element={<HomeComponent/>}/>
       <Route path='/register' element={<RegisterComponent/>}/>
       <Route path='/login' element={<LoginComponent/>}/>
-      
+
+       {/* <Route path='/user-dash' element={<UserDashBoard/>}/> */}
+        <Route path='/about-us' element={<AboutUs/>}/>
+
       {/* constrains */}
       <Route path='*' element={<NotFound/>}/>
       <Route path='/not-authorized' element={<NotAuthorized/>}/>

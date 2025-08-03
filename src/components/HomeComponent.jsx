@@ -1,7 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const HomeComponent = () => {
+  const navigate = useNavigate()
   return (
     <div className="homepage ">
       {/* navbar */}
@@ -54,14 +56,26 @@ const HomeComponent = () => {
       </nav>
 
       {/* here section */}
-      <section className="hero position-relative text-white m-3">
-        <img
-          src="/images/banner.jpg"
-          alt="banner"
-          className="w-100 img-fluid"
-          style={{ maxHeight: "500px", objectFit: "cover" }}
-        />
-      </section>
+      <div className="container mt-5">
+        <div className="row g-0 align-items-center bg-danger text-white rounded overflow-hidden ">
+          {/* Image section (8 parts out of 12 = two-thirds) */}
+          <div className="col-8">
+            <img
+              src="/images/banner.jpg"
+              alt="School themed"
+              className="img-fluid w-100 h-100 object-fit-cover"
+              style={{ minHeight: '100%', maxHeight:'900px'}}
+            />
+          </div>
+
+          {/* Welcome section (4 parts out of 12 = one-third) */}
+          <div className="col-4 p-4">
+            <h1 className="display-6 fw-bold">Welcome to Space Core</h1>
+            <Link to='/about-us' className='text-decoration-none text-dark text-center bg-light'><i class="bi bi-hand-index-thumb"> Learn more about us .....</i></Link>
+          </div>
+        </div>
+      </div>
+
 
       {/* about section */}
       <section id="about" className="py-5 bg-light">
@@ -84,8 +98,24 @@ const HomeComponent = () => {
           </p>
         </section>
       </section>
+
+      <div className='d-flex justify-content-center gap-2 container'>
+        <button className='btn btn-outline-dark btn-sm d-flex align-items-center' onClick={() => navigate(1)}>
+          <section>
+            <Link to='/register' className='text-decoration-none'>Get Started</Link>
+          </section>
+        </button>
+
+        <button className='btn btn-outline-dark btn-sm d-flex align-items-center' onClick={() => navigate(1)}>
+          <section>
+            <Link to='/login' className='text-decoration-none'>Login</Link>
+          </section>
+        </button>
+      </div>
+
     </div>
   );
 }
+
 
 export default HomeComponent
