@@ -3,8 +3,13 @@ import { useNavigate } from "react-router-dom";
 
 const { createContext, useCallback, useState, useEffect } = require("react");
 
+<<<<<<< HEAD
 export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
+=======
+const AuthContext = createContext();
+const AuthProvider = ({ children }) => {
+>>>>>>> 9816f66588c7f17e3f051f9a17dc7cfb6859dcab
   const navigate = useNavigate();
   //initialize states from local storage
   const [token, setToken] = useState(() => localStorage.getItem("token") || "");
@@ -21,7 +26,10 @@ export const AuthProvider = ({ children }) => {
     }
   });
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9816f66588c7f17e3f051f9a17dc7cfb6859dcab
   //logout
   const logout = useCallback(() => {
     localStorage.clear();
@@ -46,9 +54,23 @@ export const AuthProvider = ({ children }) => {
 
   //return
   return (
+<<<<<<< HEAD
     <AuthContext.Provider value={{ token, setToken, user, setUser, logout }}>
+=======
+    <AuthContext.Provider value={
+        { 
+            token, 
+            setToken, 
+            user, 
+            setUser, 
+            logout }}>
+>>>>>>> 9816f66588c7f17e3f051f9a17dc7cfb6859dcab
       {children}
     </AuthContext.Provider>
   );
 };
+<<<<<<< HEAD
 // export { AuthProvider, AuthContext };
+=======
+export { AuthProvider, AuthContext };
+>>>>>>> 9816f66588c7f17e3f051f9a17dc7cfb6859dcab

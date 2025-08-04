@@ -62,7 +62,7 @@ const HomeComponent = () => {
           <div className="col-8">
             <img
               src="/images/banner.jpg"
-              alt="School themed"
+              alt="banner"
               className="img-fluid w-100 h-100 object-fit-cover"
               style={{ minHeight: '100%', maxHeight:'900px'}}
             />
