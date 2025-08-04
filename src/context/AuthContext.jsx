@@ -1,36 +1,30 @@
-import { jwtDecode } from "jwt-decode";
+import React, { createContext, useCallback, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
-const { createContext, useCallback, useState, useEffect } = require("react");
-
-<<<<<<< HEAD
+// Create context
 export const AuthContext = createContext();
+
 export const AuthProvider = ({ children }) => {
-=======
-const AuthContext = createContext();
-const AuthProvider = ({ children }) => {
->>>>>>> 9816f66588c7f17e3f051f9a17dc7cfb6859dcab
   const navigate = useNavigate();
-  //initialize states from local storage
+
+  // Initialize token from localStorage
   const [token, setToken] = useState(() => localStorage.getItem("token") || "");
+
+  // Initialize user from localStorage
   const [user, setUser] = useState(() => {
     try {
       const stored = localStorage.getItem("user");
       if (!stored) return null;
-
       const parsed = JSON.parse(stored);
-      return parsed ?? null; // Handles undefined explicitly
+      return parsed ?? null;
     } catch (err) {
       console.error("Failed to parse user from localStorage:", err);
       return null;
     }
   });
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 9816f66588c7f17e3f051f9a17dc7cfb6859dcab
-  //logout
+  // Logout function
   const logout = useCallback(() => {
     localStorage.clear();
     setToken("");
@@ -38,6 +32,7 @@ const AuthProvider = ({ children }) => {
     navigate("/login");
   }, [navigate]);
 
+  // Auto logout if token expired
   useEffect(() => {
     if (token) {
       try {
@@ -52,25 +47,10 @@ const AuthProvider = ({ children }) => {
     }
   }, [token, logout]);
 
-  //return
+  // Provide context
   return (
-<<<<<<< HEAD
     <AuthContext.Provider value={{ token, setToken, user, setUser, logout }}>
-=======
-    <AuthContext.Provider value={
-        { 
-            token, 
-            setToken, 
-            user, 
-            setUser, 
-            logout }}>
->>>>>>> 9816f66588c7f17e3f051f9a17dc7cfb6859dcab
       {children}
     </AuthContext.Provider>
   );
 };
-<<<<<<< HEAD
-// export { AuthProvider, AuthContext };
-=======
-export { AuthProvider, AuthContext };
->>>>>>> 9816f66588c7f17e3f051f9a17dc7cfb6859dcab
