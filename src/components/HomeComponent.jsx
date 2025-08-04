@@ -70,7 +70,7 @@ const HomeComponent = () => {
             className="text-decoration-none"
             style={{ color: '#212529', fontWeight: '600' }}
             onMouseEnter={(e) => (e.target.style.color = '#00e676')}
-            onMouseLeave={(e) => (e.target.style.color = '#212529')}
+            
           >
             Get Started
           </Link>
@@ -82,7 +82,7 @@ const HomeComponent = () => {
             className="text-decoration-none"
             style={{ color: '#212529', fontWeight: '600' }}
             onMouseEnter={(e) => (e.target.style.color = '#00e676')}
-            onMouseLeave={(e) => (e.target.style.color = '#212529')}
+            
           >
             Login
           </Link>
