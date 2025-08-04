@@ -1,38 +1,59 @@
-import { jwtDecode } from 'jwt-decode'
-import React, { createContext, useCallback, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
-const AuthContext=createContext()
-const AuthProvider = ({children}) => {
-    const navigate=useNavigate()
+const { createContext, useCallback, useState, useEffect } = require("react");
 
-    // initialize the state from the local storage
-    const [token,setToken]=useState(()=>localStorage.getItem('token')||'')
-    const [user,setUser]=useState(()=>
-        JSON.parse(localStorage.getItem('user'||'null'))
-    )
+const AuthContext = createContext();
+const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
+  //initialize states from local storage
+  const [token, setToken] = useState(() => localStorage.getItem("token") || "");
+  const [user, setUser] = useState(() => {
+    try {
+      const stored = localStorage.getItem("user");
+      if (!stored) return null;
 
-    // logout
-    const logout=useCallback(()=>{
-        localStorage.clear()
-        setToken(''),
-        setUser(null)
-        navigate('/login')
-    },[navigate])
+      const parsed = JSON.parse(stored);
+      return parsed ?? null; // Handles undefined explicitly
+    } catch (err) {
+      console.error("Failed to parse user from localStorage:", err);
+      return null;
+    }
+  });
 
-    useEffect(()=>{
-        if(token){
-            try {
-                const decoded=jwtDecode(token)
-                const isExpired=decoded.exp *100<Date.now()
-                if(isExpired){
-                    logout
-                }
-            } catch (error) {
-                logout()
-            }
+  //logout
+  const logout = useCallback(() => {
+    localStorage.clear();
+    setToken("");
+    setUser(null);
+    navigate("/login");
+  }, [navigate]);
+
+  useEffect(() => {
+    if (token) {
+      try {
+        const decoded = jwtDecode(token);
+        const isExpired = decoded.exp * 1000 < Date.now();
+        if (isExpired) {
+          logout();
         }
-    },[token,logout])
-}
+      } catch (error) {
+        logout();
+      }
+    }
+  }, [token, logout]);
 
-export default {AuthContext,AuthProvider}
+  //return
+  return (
+    <AuthContext.Provider value={
+        { 
+            token, 
+            setToken, 
+            user, 
+            setUser, 
+            logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+export { AuthProvider, AuthContext };
