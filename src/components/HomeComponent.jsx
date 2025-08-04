@@ -1,17 +1,23 @@
-import React from 'react'
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-
 const HomeComponent = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   return (
-    <div className="homepage ">
-      {/* navbar */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-success">
+    <div
+      className="homepage"
+      style={{
+        background: 'linear-gradient(135deg, #dee4ea, #f5f7fb)',
+        minHeight: '100vh',
+        fontFamily: "'Poppins', sans-serif",
+        paddingBottom: '2rem',
+      }}
+    >
+      {/* Navbar */}
+      <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm">
         <div className="container">
-          <Link className="navbar-brand" to={"/"}>
-            Space Core
-          </Link>
+          <Link className="navbar-brand fw-bold" to="/">Space Core</Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -20,102 +26,70 @@ const HomeComponent = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div
-            className="collapse navbar-collapse justify-content-end"
-            id="navbarSupportedContent"
-          >
+          <div className="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul className="navbar-nav">
-              <li className="nav-item">
-                <a href="#about" className="nav-link">
-                  About Us
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#space" className="nav-link">
-                  What is Space
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#why-space core" className="nav-link">
-                  Why Us
-                </a>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={"/login"}>
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to={"/register"}>
-                  Get Started
-                </Link>
-              </li>
+              <li className="nav-item"><Link className="nav-link" to="/about-us">About Us</Link></li>
+              <li className="nav-item"><a href="#space" className="nav-link">What is Space</a></li>
+              <li className="nav-item"><a href="#why-space-core" className="nav-link">Why Us</a></li>
+              <li className="nav-item"><Link className="nav-link" to="/login">Login</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/register">Get Started</Link></li>
             </ul>
           </div>
         </div>
       </nav>
 
-      {/* here section */}
+      {/* Banner Section */}
       <div className="container mt-5">
-        <div className="row g-0 align-items-center bg-danger text-white rounded overflow-hidden ">
-          {/* Image section (8 parts out of 12 = two-thirds) */}
+        <div className="row g-0 align-items-center bg-dark text-white rounded overflow-hidden shadow-lg">
           <div className="col-8">
             <img
               src="/images/banner.jpg"
               alt="banner"
               className="img-fluid w-100 h-100 object-fit-cover"
-              style={{ minHeight: '100%', maxHeight:'900px'}}
+              style={{ minHeight: '100%', maxHeight: '900px' }}
             />
           </div>
-
-          {/* Welcome section (4 parts out of 12 = one-third) */}
           <div className="col-4 p-4">
             <h1 className="display-6 fw-bold">Welcome to Space Core</h1>
-            <Link to='/about-us' className='text-decoration-none text-dark text-center bg-light'><i class="bi bi-hand-index-thumb"> Learn more about us .....</i></Link>
+            <Link
+              to="/about-us"
+              className="text-decoration-none"
+              style={{ color: '#f06292', fontWeight: '500' }}
+            >
+              <i className="bi bi-hand-index-thumb"> Learn more about us .....</i>
+            </Link>
           </div>
         </div>
       </div>
 
-
-      {/* about section */}
-      <section id="about" className="py-5 bg-light">
-        <section className="about-us text-center my-5 px-4">
-          <h2 className="text-success display-4 fw-bold">About Space Core</h2>
-          <p className="lead mt-3">
-            At <strong>Space Core</strong>, we believe finding your perfect
-            space should be effortless, flexible, and tailored to your
-            lifestyle. Whether you're searching for a cozy apartment, a modern
-            co-working hub, or a short-term studio, we put the power in your
-            hands—on your time.
-          </p>
-          <p className="mt-3">
-            Our platform brings together verified listings, smart filters, and
-            user-friendly tools to make your space search seamless. Say goodbye
-            to endless phone calls and outdated directories.
-          </p>
-          <p className="mt-3">
-            <strong>Space Core:</strong> Your next space, found your way.
-          </p>
-        </section>
-      </section>
-
-      <div className='d-flex justify-content-center gap-2 container'>
-        <button className='btn btn-outline-dark btn-sm d-flex align-items-center' onClick={() => navigate(1)}>
-          <section>
-            <Link to='/register' className='text-decoration-none'>Get Started</Link>
-          </section>
+      {/* CTA Buttons */}
+      <div className="d-flex justify-content-center gap-3 container mt-4">
+        <button className="btn btn-outline-dark btn-sm px-4">
+          <Link
+            to="/register"
+            className="text-decoration-none"
+            style={{ color: '#212529', fontWeight: '600' }}
+            onMouseEnter={(e) => (e.target.style.color = '#00e676')}
+            onMouseLeave={(e) => (e.target.style.color = '#212529')}
+          >
+            Get Started
+          </Link>
         </button>
 
-        <button className='btn btn-outline-dark btn-sm d-flex align-items-center' onClick={() => navigate(1)}>
-          <section>
-            <Link to='/login' className='text-decoration-none'>Login</Link>
-          </section>
+        <button className="btn btn-outline-dark btn-sm px-4">
+          <Link
+            to="/login"
+            className="text-decoration-none"
+            style={{ color: '#212529', fontWeight: '600' }}
+            onMouseEnter={(e) => (e.target.style.color = '#00e676')}
+            onMouseLeave={(e) => (e.target.style.color = '#212529')}
+          >
+            Login
+          </Link>
         </button>
       </div>
-
     </div>
   );
-}
+};
 
-
-export default HomeComponent
+export default HomeComponent;
