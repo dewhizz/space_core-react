@@ -1,7 +1,9 @@
 import React, { useContext } from 'react'
-import AuthContext from './AuthContext'
+import { AuthContext } from './AuthContext'; 
+import { Navigate } from 'react-router-dom'
 
-const ProtectedRoute = () => {
+
+const ProtectedRoute = ({children,allowedRoles}) => {
     const {user}=useContext(AuthContext)
     if(!user){ // check if the user is logged in
         return <Navigate to='/login' replace /> //if no user they are taken to login
