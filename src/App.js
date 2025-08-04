@@ -11,11 +11,23 @@ import NotFound from './components/NotFound';
 import NotAuthorized from './components/NotAuthorized';
 import UserDashBoard from './components/user/UserDashBoard';
 import AboutUs from './components/AboutUs';
+import UserLayout from './components/user/UserLayout';
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './context/ProtectedRoute';
 
 function App() {
   return (
    <Router>
+    <AuthProvider>
     <Routes>
+      <Route path='/user-dashboard'
+       element={
+       <ProtectedRoute allowedRoles={['user']}>
+        <UserLayout/>
+        </ProtectedRoute>
+      }
+      />
+      
       <Route path='/' element={<HomeComponent/>}/>
       <Route path='/register' element={<RegisterComponent/>}/>
       <Route path='/login' element={<LoginComponent/>}/>
@@ -26,7 +38,8 @@ function App() {
       {/* constrains */}
       <Route path='*' element={<NotFound/>}/>
       <Route path='/not-authorized' element={<NotAuthorized/>}/>
-    </Routes>
+     </Routes>
+    </AuthProvider>
    </Router>
   );
 }

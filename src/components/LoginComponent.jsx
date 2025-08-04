@@ -1,9 +1,12 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link,useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+
 
 const LoginComponent=()=>{
     // setting our useState hooks
+    const {setToken,setUser}=useContext(AuthContext)
     const [email,setEmail]=useState('')
     const[password,setPassword]=useState('')
 
@@ -20,17 +23,31 @@ const LoginComponent=()=>{
             const res=await axios.post("https://school-api-fexk.onrender.com/api/user/Auth/",data)
             setLoading('')
             console.log(res.data)
-            
-            
+
+            const {token,user}=res.data
+            setToken(token)
+            setUser(user)
+
+            localStorage.setItem('token',token)
+            localStorage.setItem('user',JSON.stringify(user))
+            setLoading('')
+            if(res.data.user)
+                if(res.data.user==='user'){
+                    navigate('/user-dashboard')
+                } else if(res.data.user==='owner'){
+                    navigate('/owner-dashboard')
+                } else{
+                    navigate('/')
+                }
+                setError(res.data.message)
         } catch (error) {
             setLoading('')
             setError(error.message)
         }
     }
-
     return (
         <div className="container mt-5" style={{maxWidth:"500px"}}>
-            <form action="" className="card shadow p-4 bg-light rounded">
+            <form onSubmit={handleSubmit} className="card shadow p-4 bg-light rounded">
                 <h1 className="text-center text-success">Space Core</h1>
                 <h2 className="text-center text-dark">Login</h2>
 

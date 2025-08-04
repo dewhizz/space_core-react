@@ -1,7 +1,5 @@
-import React from 'react'
-import SideBar from './SideBar'
-import { Outlet } from 'react-router-dom'
-
+import SideBar from './SideBar'; // adjust path if needed
+import { Outlet } from 'react-router-dom';
 const UserLayout = () => {
   return (
     <div className='d-flex'>
