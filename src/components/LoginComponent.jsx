@@ -16,27 +16,33 @@ const LoginComponent = () => {
     setError('');
     setLoading('Logging in...');
     try {
-      const { data } = await axios.post(
-        "https://school-api-fexk.onrender.com/api/user/Auth/",
-        { email, password }
+      const data = { email, password }
+      const res = await axios.post(
+        "https://space-core.onrender.com/user/Auth/",
+        data
       );
+      console.log(res.data)
 
-      const { token, user } = data;
+      const { token, user } = res.data;
       setToken(token);
       setUser(user);
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
+      setLoading('')
+      if (res.data.user) {
+        if (res.data.user.role === 'user') {
+          console.log('/user-dashboard')
+          navigate('/user-dashboard')
+        // } if (res.data.user.role === 'owner') {
+        //   console.log('/owner-dashboard')
+        //   navigate('/owner-dashboard')
+        }
 
-      if (user === 'user') {
-        navigate('/user-dashboard');
-      } else if (user === 'owner') {
-        navigate('/owner-dashboard');
       } else {
-        navigate('/');
+        navigate('/')
       }
 
-      setError(data.message);
-      setLoading('');
+      setError(res.data.message)
     } catch (error) {
       setLoading('');
       setError(error.message);
