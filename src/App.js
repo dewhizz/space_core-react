@@ -13,34 +13,39 @@ import AboutUs from './components/AboutUs';
 import UserLayout from './components/user/UserLayout';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './context/ProtectedRoute';
+import Inquiries from './components/user/Inquiries';
 
 
 function App() {
   return (
-   <Router>
-    <AuthProvider>
-    <Routes>
-      <Route path='/user-dashboard'
-       element={
-       <ProtectedRoute allowedRoles={['user']}>
-        <UserLayout/>
-        </ProtectedRoute>
-      }
-      />
-      
-      <Route path='/' element={<HomeComponent/>}/>
-      <Route path='/register' element={<RegisterComponent/>}/>
-      <Route path='/login' element={<LoginComponent/>}/>
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route
+            path="/user-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["user"]}>
+                <UserLayout />
+              </ProtectedRoute>
+            }
+          />
 
-       {/* <Route path='/user-dash' element={<UserDashBoard/>}/> */}
-        <Route path='/about-us' element={<AboutUs/>}/>
+          <Route path="inquires" element={<Inquiries/>} />
+          
 
-      {/* constrains */}
-      <Route path='*' element={<NotFound/>}/>
-      <Route path='/not-authorized' element={<NotAuthorized/>}/>
-     </Routes>
-    </AuthProvider>
-   </Router>
+          <Route path="/" element={<HomeComponent />} />
+          <Route path="/register" element={<RegisterComponent />} />
+          <Route path="/login" element={<LoginComponent />} />
+
+          {/* <Route path='/user-dash' element={<UserDashBoard/>}/> */}
+          <Route path="/about-us" element={<AboutUs />} />
+
+          {/* constrains */}
+          <Route path="*" element={<NotFound />} />
+          <Route path="/not-authorized" element={<NotAuthorized />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
   );
 }
 
