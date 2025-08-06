@@ -24,7 +24,7 @@ const SideBar = () => {
                 : "nav-link text-light"
             }
           >
-            <i class="bi bi-ui-checks-grid"></i> DashBoard
+            <i className="bi bi-ui-checks-grid"></i> DashBoard
           </NavLink>
         </li>
 
@@ -44,7 +44,7 @@ const SideBar = () => {
 
         <li className="nav-item">
           <NavLink
-            to="/user-dashboard/inquires"
+            to="/user-dashboard/bookings"
             end
             className={({ isActive }) =>
               isActive

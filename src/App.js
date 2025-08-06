@@ -14,6 +14,7 @@ import UserLayout from './components/user/UserLayout';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './context/ProtectedRoute';
 import Inquiries from './components/user/Inquiries';
+import Bookings from './components/user/Bookings';
 
 
 function App() {
@@ -31,6 +32,8 @@ function App() {
           />
 
           <Route path="inquires" element={<Inquiries/>} />
+          <Route path="bookings" element={<Bookings />} />
+
           
 
           <Route path="/" element={<HomeComponent />} />
