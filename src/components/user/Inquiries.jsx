@@ -48,15 +48,17 @@ const Inquiries = () => {
   };
 
   return (
-    <div className='container mt-2'>
-      <ToastContainer position='top-right' autoClose={3000} />
+    <div className="container mt-2">
+      <ToastContainer position="top-right" autoClose={3000} />
 
-      <nav aria-label='breadcrumb' className='mb-3'>
-        <ol className='breadcrumb'>
-          <li className='breadcrumb-item fw-bold'>
-            <Link to='/user-dashboard'>Dashboard</Link>
+      <nav aria-label="breadcrumb" className="mb-3">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item fw-bold">
+            <Link to="/user-dashboard">Dashboard</Link>
           </li>
-          <li className='breadcrumb-item-active' aria-label='page'>/inquires</li>
+          <li className="breadcrumb-item-active" aria-label="page">
+            /inquires
+          </li>
         </ol>
       </nav>
 
@@ -65,7 +67,8 @@ const Inquiries = () => {
           <h5 className="text-success">
             <i className="bi bi-building me-2"></i>Inquires List
           </h5>
-          <button className="btn btn-success">
+          <button className="btn btn-success"
+          onClick={()=>navigate('/user-dashboard/inquires/add')}>
             <i className="bi bi-plus-circle"></i> Add Inquiry
           </button>
         </div>
@@ -73,7 +76,8 @@ const Inquiries = () => {
         <div className="table-responsive">
           {inquiries.length === 0 ? (
             <div className="alert alert-warning text-center">
-              <i className="bi bi-exclamation-circle me-2"></i>No Inquiries Found!
+              <i className="bi bi-exclamation-circle me-2"></i>No Inquiries
+              Found!
             </div>
           ) : (
             <table className="table table-striped table-hover table-bordered">
@@ -83,6 +87,8 @@ const Inquiries = () => {
                   <th>User</th>
                   <th>Property</th>
                   <th>Message</th>
+                  <th>Response</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -90,7 +96,7 @@ const Inquiries = () => {
                   <tr key={inq._id}>
                     <td>{index + 1}</td>
                     <td>{inq.user?.name || "N/A"}</td>
-                    <td>{inq.property}</td>
+                    <td>{inq.property?.title || "N/A"}</td>
                     <td>{inq.message}</td>
                     <td>{inq.user?.phone || "N/A"}</td>
                     <td>

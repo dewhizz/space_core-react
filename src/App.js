@@ -15,6 +15,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './context/ProtectedRoute';
 import Inquiries from './components/user/Inquiries';
 import Bookings from './components/user/Bookings';
+import InquiryAdd from './components/user/forms/InquiryAdd';
 
 
 function App() {
@@ -29,12 +30,11 @@ function App() {
                 <UserLayout />
               </ProtectedRoute>
             }
-          />
-
-          <Route path="inquires" element={<Inquiries/>} />
-          <Route path="bookings" element={<Bookings />} />
-
-          
+          >
+            <Route path="inquires" element={<Inquiries />} />
+            <Route path="inquires/add" element={<InquiryAdd />} />
+            <Route path="bookings" element={<Bookings />} />
+          </Route>
 
           <Route path="/" element={<HomeComponent />} />
           <Route path="/register" element={<RegisterComponent />} />
