@@ -12,13 +12,14 @@ const InquiryAdd = () => {
   const [message,setMessage] = useState("");
   const [properties,setProperties]=useState([])
   const [selectedPropertyId, setSelectedPropertyId] = useState("");
-  const navigate =useNavigate
+  const navigate =useNavigate()
 
   // we prepare our authHeader
   const authHeader = {
     headers: { Authorization: `Bearer ${token}` },
   };
 
+  // fetch properties
   const FetchProperties = async () => {
     try {
       toast.info("Loading properties ....");
@@ -45,15 +46,17 @@ const InquiryAdd = () => {
       toast.info("Submitting ....");
       const data = { message, property:selectedPropertyId };
       const res = await axios.post(
-        "https://space-core.onrender.com/api/properties/",
+        "https://space-core.onrender.com/api/inquiries/",
         data,
         authHeader
       );
+      toast.dismiss()
       toast.success(res.data.message || "Property added Successfully");
       setMessage('')
-      setProperties('')
-      setSelectedPropertyId("");
+      setProperties([])
+      // setSelectedPropertyId('')
       FetchProperties()
+      navigate('/user-dashboard/inquires')
     } catch (error) {
       toast.dismiss();
       toast.error(error.response?.data?.message || "Error submitting");
