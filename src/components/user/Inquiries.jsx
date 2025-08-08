@@ -16,7 +16,10 @@ const Inquiries = () => {
   const FetchInquiries = async () => {
     try {
       toast.info('Loading Your Inquires ......');
-      const res = await axios.get('https://space-core.onrender.com/api/inquiries/', authHeader);
+      const res = await axios.get(
+        "https://space-core.onrender.com/api/inquiries/myinquires",
+        authHeader
+      );
       setInquiries(res.data);
       console.log(res.data);
       toast.dismiss();
@@ -67,8 +70,10 @@ const Inquiries = () => {
           <h5 className="text-success">
             <i className="bi bi-building me-2"></i>Inquires List
           </h5>
-          <button className="btn btn-success"
-          onClick={()=>navigate('/user-dashboard/inquires/add')}>
+          <button
+            className="btn btn-success"
+            onClick={() => navigate("/user-dashboard/inquires/add")}
+          >
             <i className="bi bi-plus-circle"></i> Add Inquiry
           </button>
         </div>
@@ -84,10 +89,10 @@ const Inquiries = () => {
               <thead className="table-success">
                 <tr>
                   <th>#</th>
-                  <th>User</th>
                   <th>Property</th>
                   <th>Message</th>
                   <th>Response</th>
+                  <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -95,10 +100,10 @@ const Inquiries = () => {
                 {inquiries.map((inq, index) => (
                   <tr key={inq._id}>
                     <td>{index + 1}</td>
-                    <td>{inq.user?.name || "N/A"}</td>
                     <td>{inq.property?.title || "N/A"}</td>
                     <td>{inq.message}</td>
-                    <td>{inq.user?.phone || "N/A"}</td>
+                    <td>{inq.response ||"N/A"}</td>
+                    <td>{inq.status ||"Pending"}</td>
                     <td>
                       <button className="btn btn-sm btn-warning me-2">
                         <i className="bi bi-pencil-square"></i>

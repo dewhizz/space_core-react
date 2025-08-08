@@ -16,6 +16,7 @@ import ProtectedRoute from './context/ProtectedRoute';
 import Inquiries from './components/user/Inquiries';
 import Bookings from './components/user/Bookings';
 import InquiryAdd from './components/user/forms/InquiryAdd';
+import InquiryEdit from './components/user/forms/InquiryEdit';
 
 
 function App() {
@@ -33,6 +34,8 @@ function App() {
           >
             <Route path="inquires" element={<Inquiries />} />
             <Route path="inquires/add" element={<InquiryAdd />} />
+            <Route path="inquires/edit" element={<InquiryEdit/>} />
+
             <Route path="bookings" element={<Bookings />} />
           </Route>
 
