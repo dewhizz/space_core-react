@@ -50,6 +50,11 @@ const Inquiries = () => {
     }
   };
 
+    // handle edit
+  const handleEdit = (inquiryData) => {
+    navigate("/user-dashboard/inquires/edit", { state: { inquiryData } });
+  };
+
   return (
     <div className="container mt-2">
       <ToastContainer position="top-right" autoClose={3000} />
@@ -97,20 +102,21 @@ const Inquiries = () => {
                 </tr>
               </thead>
               <tbody>
-                {inquiries.map((inq, index) => (
-                  <tr key={inq._id}>
+                {inquiries.map((inquires, index) => (
+                  <tr key={inquires._id}>
                     <td>{index + 1}</td>
-                    <td>{inq.property?.title || "N/A"}</td>
-                    <td>{inq.message}</td>
-                    <td>{inq.response ||"N/A"}</td>
-                    <td>{inq.status ||"Pending"}</td>
+                    <td>{inquires.property?.title || "N/A"}</td>
+                    <td>{inquires.message}</td>
+                    <td>{inquires.response ||"N/A"}</td>
+                    <td>{inquires.status ||"Pending"}</td>
                     <td>
-                      <button className="btn btn-sm btn-warning me-2">
+                      <button className="btn btn-sm btn-warning me-2"
+                      onClick={()=>handleEdit(inquires)}>
                         <i className="bi bi-pencil-square"></i>
                       </button>
                       <button
                         className="btn btn-sm btn-danger me-2"
-                        onClick={() => handleDelete(inq._id)}
+                        onClick={() => handleDelete(inquires._id)}
                       >
                         <i className="bi bi-trash"></i>
                       </button>

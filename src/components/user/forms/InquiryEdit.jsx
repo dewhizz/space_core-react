@@ -11,8 +11,8 @@ const InquiryEdit = () => {
   // introduce the hooks
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState("");
-  const [properties, setPropties] = useState([]);
-  const [selectedPropertyId, setSelectedPropertyId] = useState([]);
+  const [properties, setProperties] = useState([]);
+const [selectedPropertyId, setSelectedPropertyId] = useState("");
 
   const navigate = useNavigate();
 
@@ -27,19 +27,20 @@ const InquiryEdit = () => {
 
   const fetchproperties = async () => {
     try {
-      toast.info("Loading properties ....");
-      const res = await axios.get(
-        "https://space-core.onrender.com/api/properties/",
-        authHeader
-      );
-      toast.dismiss();
-      console.log(res.data);
-      setSelectedPropertyId(res.data);
+        toast.info("Loading properties ....");
+        const res = await axios.get(
+            "https://space-core.onrender.com/api/properties/",
+            authHeader
+        );
+        toast.dismiss();
+        console.log(res.data);
+        // Corrected line: Set the properties array to the 'properties' state
+        setProperties(res.data); 
     } catch (error) {
-      toast.dismiss();
-      toast.error(error.response?.data?.message || "Failed to load properties");
+        toast.dismiss();
+        toast.error(error.response?.data?.message || "Failed to load properties");
     }
-  };
+};
   useEffect(() => {
     fetchproperties();
   }, []);
@@ -65,7 +66,7 @@ const InquiryEdit = () => {
       toast.info("Updating ....");
       const data = { message, property: selectedPropertyId };
       const res = await axios.put(
-        `https://school-api-fexk.onrender.com/api/classroom/${selectedInquiry._id}`,
+        `https://space-core.onrender.com/api/inquiries/${selectedInquiry._id}`,
         data,
         authHeader
       );
@@ -87,7 +88,7 @@ const InquiryEdit = () => {
           <li className="breadcrumb-item fw-bold">
             <Link to="/user-dashboard">Dashboard</Link>
           </li>{" "}
-          <li
+         <li
             className="breadcrumb-item-active"
             aria-label="/user-dashboard/inquires"
           >
