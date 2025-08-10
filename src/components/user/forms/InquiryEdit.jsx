@@ -8,44 +8,39 @@ import { AuthContext } from "../../../context/AuthContext";
 const InquiryEdit = () => {
   const { token } = useContext(AuthContext);
 
-  // introduce the hooks
   const [message, setMessage] = useState("");
-  const [status, setStatus] = useState("");
   const [properties, setProperties] = useState([]);
-const [selectedPropertyId, setSelectedPropertyId] = useState("");
+  const [selectedPropertyId, setSelectedPropertyId] = useState("");
 
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const selectedInquiry = state?.inquiryData;
 
-    // recieve sata from the classes component
-    const { state } = useLocation();
-    const selectedInquiry = state?.inquiryData;
-
-  // we prepare our authHeader
   const authHeader = {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const fetchproperties = async () => {
+  //  Fetch properties
+  const fetchProperties = async () => {
     try {
-        toast.info("Loading properties ....");
-        const res = await axios.get(
-            "https://space-core.onrender.com/api/properties/",
-            authHeader
-        );
-        toast.dismiss();
-        console.log(res.data);
-        // Corrected line: Set the properties array to the 'properties' state
-        setProperties(res.data); 
+      toast.info("Loading properties ....");
+      const res = await axios.get(
+        "https://space-core.onrender.com/api/properties/",
+        authHeader
+      );
+      toast.dismiss();
+      setProperties(res.data);
     } catch (error) {
-        toast.dismiss();
-        toast.error(error.response?.data?.message || "Failed to load properties");
+      toast.dismiss();
+      toast.error(error.response?.data?.message || "Failed to load properties");
     }
-};
+  };
+
   useEffect(() => {
-    fetchproperties();
+    fetchProperties();
   }, []);
 
-  // useEffect to update the hooks /state to this component
+  // ✅ Load inquiry data
   useEffect(() => {
     if (!selectedInquiry) {
       toast.error("No Inquiry data provided");
@@ -54,12 +49,21 @@ const [selectedPropertyId, setSelectedPropertyId] = useState("");
       }, 2000);
       return;
     }
-    setMessage(selectedInquiry?.message || "");
-    setStatus(selectedInquiry?.status || "Pending");
-    setSelectedPropertyId(selectedInquiry?.property?._id);
+
+    // Prevent editing if inquiry is already approved
+    if (selectedInquiry.status === "approved") {
+      toast.warn("Approved inquiries cannot be edited.");
+      setTimeout(() => {
+        navigate("/user-dashboard/inquires");
+      }, 2000);
+      return;
+    }
+
+    setMessage(selectedInquiry.message || "");
+    setSelectedPropertyId(selectedInquiry.property?._id || "");
   }, [selectedInquiry, navigate]);
 
-  //   handle submit
+  //  Handle update
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -70,7 +74,7 @@ const [selectedPropertyId, setSelectedPropertyId] = useState("");
         data,
         authHeader
       );
-      console.log(res.data);
+      toast.dismiss();
       toast.success(res.data.message || "Inquiry Updated Successfully");
       navigate("/user-dashboard/inquires");
     } catch (error) {
@@ -78,24 +82,22 @@ const [selectedPropertyId, setSelectedPropertyId] = useState("");
       toast.error(error.response?.data?.message || "Error Updating");
     }
   };
+
   return (
     <div className="container mt-3">
       <ToastContainer position="top-right" autoClose={3000} />
 
-      {/* breadcrumbs provide ease in path location */}
+      {/* Breadcrumbs */}
       <nav aria-label="breadcrumb" className="mb-3">
         <ol className="breadcrumb">
           <li className="breadcrumb-item fw-bold">
             <Link to="/user-dashboard">Dashboard</Link>
-          </li>{" "}
-         <li
-            className="breadcrumb-item-active"
-            aria-label="/user-dashboard/inquires"
-          >
-            /inquires
+          </li>
+          <li className="breadcrumb-item active" aria-current="user-dashboard/inquires">
+            Inquiries
           </li>
           <li className="breadcrumb-item fw-bold">
-            <Link to="page">/Update Inquiry</Link>
+            <Link to="page">Update Inquiry</Link>
           </li>
         </ol>
       </nav>
@@ -110,14 +112,14 @@ const [selectedPropertyId, setSelectedPropertyId] = useState("");
           </Link>
         </div>
 
-        {/* form to post the class */}
+        {/* Inquiry Form */}
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">
               <input
                 type="text"
                 className="form-control"
-                placeholder="message"
+                placeholder="Message"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 required
@@ -129,13 +131,13 @@ const [selectedPropertyId, setSelectedPropertyId] = useState("");
                 className="form-control"
                 value={selectedPropertyId}
                 onChange={(e) => setSelectedPropertyId(e.target.value)}
+                required
               >
                 <option value="">Select Property</option>
-                {properties.map((property, index) => (
-                  <option
-                    key={property._id}
-                    value={property._id}
-                  >{`${property.title},${property.owner?.name},${property.plotNumber}`}</option>
+                {properties.map((property) => (
+                  <option key={property._id} value={property._id}>
+                    {`${property.title}, ${property.owner?.name}, ${property.plotNumber}`}
+                  </option>
                 ))}
               </select>
             </div>

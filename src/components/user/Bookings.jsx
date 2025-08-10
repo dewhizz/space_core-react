@@ -5,7 +5,8 @@ import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
 const Bookings = () => {
-  const [inquiries, setInquiries] = useState([]);
+  const [bookings, setBookings] = useState([]);
+  const [status,setStatus]=useState('')
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -13,14 +14,14 @@ const Bookings = () => {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const FetchInquiries = async () => {
+  const FetchBookings = async () => {
     try {
       toast.info("Loading Your Bookings ......");
       const res = await axios.get(
-        "https://space-core.onrender.com/api/bookings/",
+        "https://space-core.onrender.com/api/booking/my-bookings",
         authHeader
       );
-      setInquiries(res.data);
+      setBookings(res.data);
       console.log(res.data);
       toast.dismiss();
     } catch (error) {
@@ -30,7 +31,7 @@ const Bookings = () => {
   };
 
   useEffect(() => {
-    FetchInquiries();
+    FetchBookings();
   }, []);
 
   const handleDelete = async (id) => {
@@ -39,10 +40,11 @@ const Bookings = () => {
         try {
           toast.warning("Deleting Credentials");
           const res = await axios.delete(
-            `https://space-core.onrender.com/api/inquiries/${id}`,
+            `https://space-core.onrender.com/api/booking/${id}`,
             authHeader
           );
           toast.info(res.data.message);
+          
         } catch (error) {
           toast.dismiss();
           toast.error(error.response?.data?.message);
@@ -79,7 +81,7 @@ const Bookings = () => {
         </div>
 
         <div className="table-responsive">
-          {inquiries.length === 0 ? (
+          {bookings.length === 0 ? (
             <div className="alert alert-warning text-center">
               <i className="bi bi-exclamation-circle me-2"></i>No Bookings
               Found!
@@ -89,26 +91,28 @@ const Bookings = () => {
               <thead className="table-success">
                 <tr>
                   <th>#</th>
-                  <th>User</th>
-                  <th>Property</th>
-                  <th>Message</th>
+                  <th>Inquiry</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {inquiries.map((inq, index) => (
-                  <tr key={inq._id}>
+                {bookings.map((bookings, index) => (
+                  <tr key={bookings._id}>
                     <td>{index + 1}</td>
-                    <td>{inq.user?.name || "N/A"}</td>
-                    <td>{inq.property}</td>
-                    <td>{inq.message}</td>
-                    <td>{inq.user?.phone || "N/A"}</td>
+                   <td>{bookings.inquiry?.property?.title || "No title available"}</td>
+                    <td>{bookings.startDate}</td>
+                    <td>{bookings.endDate || "N/A"}</td>
+                     <td>{bookings.status || "Pending"}</td>
                     <td>
                       <button className="btn btn-sm btn-warning me-2">
                         <i className="bi bi-pencil-square"></i>
                       </button>
                       <button
                         className="btn btn-sm btn-danger me-2"
-                        onClick={() => handleDelete(inq._id)}
+                        onClick={() => handleDelete(bookings._id)}
                       >
                         <i className="bi bi-trash"></i>
                       </button>

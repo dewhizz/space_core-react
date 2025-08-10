@@ -52,7 +52,7 @@ const InquiryAdd = () => {
         authHeader
       );
       toast.dismiss()
-      toast.success(res.data.message || "Property added Successfully");
+      toast.success(res.data.message || "Inquiry added Successfully");
       setMessage('')
       setProperties([])
       setStatus('')

@@ -9,6 +9,7 @@ const OwnerLayout = () => {
         <div className="flex-grow-1">
             <main className='p-4 vh-100'>
                 {/* outlet renders the matched child route elements */}
+                <Dashboard/>
                 <Outlet/>
             </main>
         </div>

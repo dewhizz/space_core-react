@@ -17,6 +17,8 @@ import Inquiries from './components/user/Inquiries';
 import Bookings from './components/user/Bookings';
 import InquiryAdd from './components/user/forms/InquiryAdd';
 import InquiryEdit from './components/user/forms/InquiryEdit';
+import BookingAdd from './components/user/forms/BookingAdd';
+import BookingEdit from './components/user/forms/BookingEdit';
 
 
 function App() {
@@ -37,6 +39,8 @@ function App() {
             <Route path="inquires/edit" element={<InquiryEdit/>} />
 
             <Route path="bookings" element={<Bookings />} />
+            <Route path="bookings/add" element={<BookingAdd />} />
+            <Route path="bookings/edit" element={<BookingEdit />} />
           </Route>
 
           <Route path="/" element={<HomeComponent />} />

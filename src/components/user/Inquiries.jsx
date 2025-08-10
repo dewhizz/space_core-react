@@ -17,7 +17,7 @@ const Inquiries = () => {
     try {
       toast.info('Loading Your Inquires ......');
       const res = await axios.get(
-        "https://space-core.onrender.com/api/inquiries/myinquires",
+        "https://space-core.onrender.com/api/inquiries/my-inquires",
         authHeader
       );
       setInquiries(res.data);
