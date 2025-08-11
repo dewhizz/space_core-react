@@ -33,9 +33,9 @@ const LoginComponent = () => {
         if (res.data.user.role === 'user') {
           console.log('/user-dashboard')
           navigate('/user-dashboard')
-        // } if (res.data.user.role === 'owner') {
-        //   console.log('/owner-dashboard')
-        //   navigate('/owner-dashboard')
+        } if (res.data.user.role === 'owner') {
+         console.log('/owner-dashboard')
+           navigate('/owner-dashboard')
         }
 
       } else {
