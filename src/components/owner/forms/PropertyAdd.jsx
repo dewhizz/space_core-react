@@ -69,7 +69,7 @@ const PropertyAdd = () => {
       setStatus("active");
       setPhoto(null);
 
-      navigate("/owner-dashboard/properties");
+      navigate("/owner-dashboard/add-property");
     } catch (err) {
       toast.dismiss();
       toast.error(err.response?.data?.message || "Failed to add property");

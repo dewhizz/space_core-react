@@ -16,7 +16,7 @@ const SideBar = () => {
       <ul className="nav nav-pills flex-column mb-auto">
         <li className="nav-item mb-4">
           <NavLink
-            to="/user-dashboard"
+            to="/owner-dashboard"
             end
             className={({ isActive }) =>
               isActive
@@ -28,9 +28,23 @@ const SideBar = () => {
           </NavLink>
         </li>
 
+            <li className="nav-item">
+          <NavLink
+            to="/owner-dashboard/owner-properties"
+            end
+            className={({ isActive }) =>
+              isActive
+                ? "nav-link bg-dark text-light fw-bold"
+                : "nav-link text-light"
+            }
+          >
+            <i class="bi bi-question-octagon-fill"></i> Properties
+          </NavLink>
+        </li>
+
         <li className="nav-item">
           <NavLink
-            to="/user-dashboard/inquires"
+            to="/owner-dashboard/owner-inquires"
             end
             className={({ isActive }) =>
               isActive
@@ -44,7 +58,7 @@ const SideBar = () => {
 
         <li className="nav-item">
           <NavLink
-            to="/user-dashboard/bookings"
+            to="/owner-dashboard/bookings"
             end
             className={({ isActive }) =>
               isActive

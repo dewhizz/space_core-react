@@ -17,16 +17,18 @@ import NotAuthorized from "./components/NotAuthorized";
 import NotFound from "./components/NotFound";
 
 import UserLayout from "./components/user/UserLayout";
-import Inquiries from "./components/user/Inquiries";
+import Inquiries from "./components/user/OwnerInquiries";
 import InquiryAdd from "./components/user/forms/InquiryAdd";
 import InquiryEdit from "./components/user/forms/InquiryEdit";
 import Bookings from "./components/user/Bookings";
 import BookingAdd from "./components/user/forms/BookingAdd";
 import BookingEdit from "./components/user/forms/BookingEdit";
 
+
 // Assuming you have this component, or create a simple one for owners
 import OwnerLayout from "./components/owner/OwnerLayout";
 import PropertyAdd from "./components/owner/forms/PropertyAdd";
+import OwnerInquiries from "./components/user/OwnerInquiries";
 
 function App() {
   return (
@@ -56,7 +58,8 @@ function App() {
             <Route path="bookings/edit" element={<BookingEdit />} />
 
             <Route path="owner-dashboard" element={<OwnerLayout />} />
-            <Route path="property/add" element={<PropertyAdd />} />
+            <Route path="owner-inquires" element={<OwnerInquiries />} />
+            <Route path="add-property" element={<PropertyAdd />} />
           </Route>
 
           {/* Other Routes */}

@@ -4,7 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 
-const Inquiries = () => {
+const OwnerInquiries = () => {
   const [inquiries, setInquiries] = useState([]);
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Inquiries = () => {
     try {
       toast.info('Loading Your Inquires ......');
       const res = await axios.get(
-        "https://space-core.onrender.com/api/inquiries/my-inquires",
+        "https://space-core.onrender.com/api/owner-inquires/my-inquires",
         authHeader
       );
       setInquiries(res.data);
@@ -38,7 +38,7 @@ const Inquiries = () => {
       if (window.confirm('Delete this Inquiry')) {
         try {
           toast.warning('Deleting Credentials');
-          const res = await axios.delete(`https://space-core.onrender.com/api/inquiries/${id}`, authHeader);
+          const res = await axios.delete(`https://space-core.onrender.com/api/owner-inquiries/${id}`, authHeader);
           toast.info(res.data.message);
         } catch (error) {
           toast.dismiss();
@@ -86,7 +86,7 @@ const Inquiries = () => {
         <div className="table-responsive">
           {inquiries.length === 0 ? (
             <div className="alert alert-warning text-center">
-              <i className="bi bi-exclamation-circle me-2"></i>No Inquiries
+              <i className="bi bi-exclamation-circle me-2"></i>No OwnerInquiries
               Found!
             </div>
           ) : (
@@ -132,4 +132,4 @@ const Inquiries = () => {
   );
 };
 
-export default Inquiries;
+export default OwnerInquiries;

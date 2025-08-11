@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 
 const DashboardNavbar = () => {
-    const {user,logout}=useContext(AuthContext)
+    const {user}=useContext(AuthContext)
   return (
     <nav className="navbar navbar-expand-lg bg-light shadow-sm ox-4 mb-3 rounded">
       <div className="container-fluid d-flex justify-content-between align-items-center">
@@ -15,13 +15,10 @@ const DashboardNavbar = () => {
             <strong>{user?.name}</strong>
           </span>
 
-          {/* logout */}
-          <button
-            className="btn btn-sm btn-outline-danger d-flex align-items-center"
-            onClick={logout}
-          >
-            <i className="bi bi-box-arrow-right"></i>Logout
-          </button>
+          <span className="me-3 text-muted">
+            <i className="bi bi-person-gear me-1"></i>
+            <strong>{user?.role}</strong>
+          </span> 
         </div>
       </div>
     </nav>

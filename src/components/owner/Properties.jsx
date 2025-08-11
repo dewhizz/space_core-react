@@ -19,7 +19,7 @@ const Properties = () => {
       <h2>Your Properties</h2>
       <button
         className="btn btn-primary mb-3"
-        onClick={() => navigate("/owner-dashboard/add-property")}
+        onClick={() => navigate("/user-dashboard/owner-dashboard/add-property")}
       >
         Add New Property
       </button>

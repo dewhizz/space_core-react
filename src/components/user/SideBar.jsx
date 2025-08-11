@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 
 const SideBar = () => {
   const [showSwitchOption, setShowSwitchOption] = useState(false);
@@ -16,6 +17,7 @@ const SideBar = () => {
     }
   };
 
+  const {logout}=useContext(AuthContext)
   return (
     <div
       className="text-light d-flex flex-column p-3"
@@ -76,32 +78,50 @@ const SideBar = () => {
       </div>
 
       {/* Bottom gear icon */}
-      <div style={{ position: "relative" }}>
-        <button
-          className="btn btn-link text-light"
-          onClick={() => setShowSwitchOption(!showSwitchOption)}
-          style={{ textDecoration: "none" }}
-        >
-          <i className="bi bi-gear-fill fs-4"></i>
-        </button>
+     <div style={{ position: "relative" }}>
+  {/* Gear Icon Button */}
+  <button
+    className="btn btn-link text-light"
+    onClick={() => setShowSwitchOption(!showSwitchOption)}
+    style={{ textDecoration: "none" }}
+  >
+    <i className="bi bi-gear-fill fs-4"></i>
+  </button>
 
-        {showSwitchOption && (
-          <div
-            className="bg-dark p-2 rounded"
-            style={{
-              position: "absolute",
-              bottom: "40px",
-              left: 0,
-              width: "100%",
-              cursor: "pointer",
-              zIndex: 10,
-            }}
-            onClick={handleSwitchClick}
-          >
-            Switch to Owner Dashboard
-          </div>
-        )}
+  {/* Dropdown Menu */}
+  {showSwitchOption && (
+    <div
+      className="bg-dark p-2 rounded"
+      style={{
+        position: "absolute",
+        bottom: "40px",
+        left: 0,
+        minWidth: "180px",
+        zIndex: 10,
+      }}
+    >
+      {/* Switch Option */}
+      <div
+        className="text-light py-1 px-2"
+        style={{ cursor: "pointer" }}
+        onClick={handleSwitchClick}
+      >
+        Switch to Owner Dashboard
       </div>
+
+      {/* Divider */}
+      <hr className="text-secondary my-2" />
+
+      {/* Logout Button */}
+      <button
+        className="btn btn-sm btn-outline-danger w-100"
+        onClick={logout}
+      >
+        <i className="bi bi-box-arrow-right me-2"></i>Logout
+      </button>
+    </div>
+  )}
+</div>
     </div>
   );
 };
