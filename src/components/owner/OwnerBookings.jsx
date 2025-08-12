@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
-const Bookings = () => {
+const OwnerBookings = () => {
   const [bookings, setBookings] = useState([]);
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Bookings = () => {
     try {
       toast.info("Loading bookings...");
       const res = await axios.get(
-        "https://space-core.onrender.com/api/bookings/owner-bookings",
+        "https://space-core.onrender.com/api/booking/owner-bookings",
         authHeader
       );
       setBookings(res.data);
@@ -127,4 +127,4 @@ const Bookings = () => {
   );
 };
 
-export default Bookings;
+export default OwnerBookings;

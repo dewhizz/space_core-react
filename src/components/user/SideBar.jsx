@@ -3,21 +3,19 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
 const SideBar = () => {
-  const [showSwitchOption, setShowSwitchOption] = useState(false);
+  const [showSwitchOption, setShowSwitchOption] = useState(true);
   const navigate = useNavigate();
 
   // Simulate user property status. Replace this with your real check
-  const hasAddedProperty = false; // change this to true to test different flows
+  const hasAddedProperty = true; // change this to true to test different flows
 
   const handleSwitchClick = () => {
     if (hasAddedProperty) {
-      navigate("/owner-dashboard");
-    } else {
-      navigate("/owner-dashboard/add-property");
+      navigate("/owner-dashboard"); 
     }
   };
 
-  const {logout}=useContext(AuthContext)
+  const { logout } = useContext(AuthContext);
   return (
     <div
       className="text-light d-flex flex-column p-3"
@@ -78,50 +76,50 @@ const SideBar = () => {
       </div>
 
       {/* Bottom gear icon */}
-     <div style={{ position: "relative" }}>
-  {/* Gear Icon Button */}
-  <button
-    className="btn btn-link text-light"
-    onClick={() => setShowSwitchOption(!showSwitchOption)}
-    style={{ textDecoration: "none" }}
-  >
-    <i className="bi bi-gear-fill fs-4"></i>
-  </button>
+      <div style={{ position: "relative" }}>
+        {/* Gear Icon Button */}
+        <button
+          className="btn btn-link text-light"
+          onClick={() => setShowSwitchOption(!showSwitchOption)}
+          style={{ textDecoration: "none" }}
+        >
+          <i className="bi bi-gear-fill fs-4"></i>
+        </button>
 
-  {/* Dropdown Menu */}
-  {showSwitchOption && (
-    <div
-      className="bg-dark p-2 rounded"
-      style={{
-        position: "absolute",
-        bottom: "40px",
-        left: 0,
-        minWidth: "180px",
-        zIndex: 10,
-      }}
-    >
-      {/* Switch Option */}
-      <div
-        className="text-light py-1 px-2"
-        style={{ cursor: "pointer" }}
-        onClick={handleSwitchClick}
-      >
-        Switch to Owner Dashboard
+        {/* Dropdown Menu */}
+        {showSwitchOption && (
+          <div
+            className="bg-dark p-2 rounded"
+            style={{
+              position: "absolute",
+              bottom: "40px",
+              left: 0,
+              minWidth: "180px",
+              zIndex: 10,
+            }}
+          >
+            {/* Switch Option */}
+            <div
+              className="text-light py-1 px-2"
+              style={{ cursor: "pointer" }}
+              onClick={handleSwitchClick}
+            >
+              Switch to Owner Dashboard
+            </div>
+
+            {/* Divider */}
+            <hr className="text-secondary my-2" />
+
+            {/* Logout Button */}
+            <button
+              className="btn btn-sm btn-outline-danger w-100"
+              onClick={logout}
+            >
+              <i className="bi bi-box-arrow-right me-2"></i>Logout
+            </button>
+          </div>
+        )}
       </div>
-
-      {/* Divider */}
-      <hr className="text-secondary my-2" />
-
-      {/* Logout Button */}
-      <button
-        className="btn btn-sm btn-outline-danger w-100"
-        onClick={logout}
-      >
-        <i className="bi bi-box-arrow-right me-2"></i>Logout
-      </button>
-    </div>
-  )}
-</div>
     </div>
   );
 };

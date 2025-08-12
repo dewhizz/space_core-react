@@ -6,10 +6,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const PropertyAdd = () => {
-  const { token } = useContext(AuthContext); // JWT token from context
+  const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Form field states
+  // Form state variables
   const [plotNumber, setPlotNumber] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -21,7 +21,7 @@ const PropertyAdd = () => {
   const [status, setStatus] = useState("active");
   const [photo, setPhoto] = useState(null);
 
-  const [loading, setLoading] = useState(false); // to disable button on submit
+  const [loading, setLoading] = useState(false);
 
   const authHeader = {
     headers: { Authorization: `Bearer ${token}` },
@@ -33,31 +33,29 @@ const PropertyAdd = () => {
     setLoading(true);
     toast.info("Submitting Property...");
 
-    const data = new FormData();
-    data.append("plotNumber", plotNumber);
-    data.append("title", title);
-    data.append("description", description);
-    data.append("propertyType", propertyType);
-    data.append("location", location);
-    data.append("rentAmount", rentAmount);
-    data.append("depositAmount", depositAmount);
-    data.append("isAvailable", isAvailable);
-    data.append("status", status);
+    const formData = new FormData();
+    formData.append("plotNumber", plotNumber);
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("propertyType", propertyType);
+    formData.append("location", location);
+    formData.append("rentAmount", rentAmount);
+    formData.append("depositAmount", depositAmount);
+    formData.append("isAvailable", isAvailable);
+    formData.append("status", status);
 
-    if (photo) {
-      data.append("photo", photo);
-    }
+    if (photo) formData.append("photo", photo);
 
     try {
       const res = await axios.post(
         "https://space-core.onrender.com/api/properties/",
-        data,
+        formData,
         authHeader
       );
       toast.dismiss();
       toast.success(res.data.message || "Property added successfully");
 
-      // Optional: Reset form fields
+      // Reset form after successful submit
       setPlotNumber("");
       setTitle("");
       setDescription("");
@@ -69,18 +67,23 @@ const PropertyAdd = () => {
       setStatus("active");
       setPhoto(null);
 
-      navigate("/owner-dashboard/add-property");
-    } catch (err) {
+      // Navigate to properties list or wherever
+      navigate("/owner-dashboard/properties");
+    } catch (error) {
       toast.dismiss();
-      toast.error(err.response?.data?.message || "Failed to add property");
+      toast.error(error.response?.data?.message || "Failed to add property");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="property-add container mt-4" style={{ maxWidth: 600 }}>
-      <h2 className="mb-4">Add New Property</h2>
+    <div className="container mt-3" style={{ maxWidth: 600 }}>
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      <h2 className="mb-4 text-success">
+        <i className="bi bi-building me-2"></i>Add New Property
+      </h2>
 
       <form onSubmit={handleSubmit} encType="multipart/form-data">
         <input
@@ -88,8 +91,8 @@ const PropertyAdd = () => {
           placeholder="Plot Number"
           value={plotNumber}
           onChange={(e) => setPlotNumber(e.target.value)}
-          required
           className="form-control mb-3"
+          required
           disabled={loading}
         />
 
@@ -109,12 +112,12 @@ const PropertyAdd = () => {
           className="form-control mb-3"
           rows={4}
           disabled={loading}
-        ></textarea>
+        />
 
         <select
+          className="form-select mb-3"
           value={propertyType}
           onChange={(e) => setPropertyType(e.target.value)}
-          className="form-select mb-3"
           disabled={loading}
         >
           <option value="apartment">Apartment</option>
@@ -166,9 +169,9 @@ const PropertyAdd = () => {
         </div>
 
         <select
+          className="form-select mb-3"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="form-select mb-3"
           disabled={loading}
         >
           <option value="active">Active</option>
@@ -178,8 +181,8 @@ const PropertyAdd = () => {
 
         <input
           type="file"
-          onChange={(e) => setPhoto(e.target.files[0])}
           accept="image/*"
+          onChange={(e) => setPhoto(e.target.files[0])}
           className="form-control mb-3"
           disabled={loading}
         />
@@ -188,8 +191,6 @@ const PropertyAdd = () => {
           {loading ? "Submitting..." : "Add Property"}
         </button>
       </form>
-
-      <ToastContainer />
     </div>
   );
 };

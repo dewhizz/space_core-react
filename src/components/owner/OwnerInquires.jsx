@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
-const Inquiries = () => {
+const OwnerInquiries = () => {
   const [inquiries, setInquiries] = useState([]);
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ const Inquiries = () => {
   const [editingInquiry, setEditingInquiry] = useState(null);
   const [responseText, setResponseText] = useState("");
   const [status, setStatus] = useState("Pending");
+  const [loading, setLoading] = useState(false); // for better UX
 
   const FetchInquiries = async () => {
     try {
@@ -54,16 +55,26 @@ const Inquiries = () => {
   };
 
   const handleEdit = (inquiryData) => {
+    // This navigates to a separate edit page — can keep if you want
     navigate("/owner-dashboard/inquires/edit", { state: { inquiryData } });
   };
 
   const startEditing = (inquiry) => {
+    // Optional: prevent editing if already approved or rejected
+    if (["Approved", "Rejected"].includes(inquiry.status)) {
+      toast.info(
+        "You cannot edit inquiries that are already approved or rejected."
+      );
+      return;
+    }
     setEditingInquiry(inquiry);
     setResponseText(inquiry.response || "");
     setStatus(inquiry.status || "Pending");
   };
 
   const handleUpdate = async () => {
+    if (!editingInquiry) return;
+    setLoading(true);
     try {
       toast.info("Updating inquiry...");
       await axios.put(
@@ -74,8 +85,12 @@ const Inquiries = () => {
       toast.success("Inquiry updated!");
       FetchInquiries();
       setEditingInquiry(null);
+      setResponseText("");
+      setStatus("Pending");
     } catch (error) {
       toast.error(error.response?.data?.message || "Update failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,14 +112,14 @@ const Inquiries = () => {
       <div className="card p-4 shadow-sm">
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="text-success">
-            <i className="bi bi-building me-2"></i>Inquiries List
+            <i className="bi bi-building me-2"></i>OwnerInquiries List
           </h5>
         </div>
 
         <div className="table-responsive">
           {inquiries.length === 0 ? (
             <div className="alert alert-warning text-center">
-              <i className="bi bi-exclamation-circle me-2"></i>No Inquiries
+              <i className="bi bi-exclamation-circle me-2"></i>No Owner Inquiries
               Found!
             </div>
           ) : (
@@ -135,6 +150,9 @@ const Inquiries = () => {
                       <button
                         className="btn btn-sm btn-primary me-2"
                         onClick={() => startEditing(inquiry)}
+                        disabled={["Approved", "Rejected"].includes(
+                          inquiry.status
+                        )}
                       >
                         Respond / Approve
                       </button>
@@ -167,6 +185,7 @@ const Inquiries = () => {
                 className="form-control"
                 value={responseText}
                 onChange={(e) => setResponseText(e.target.value)}
+                disabled={loading}
               />
             </div>
             <div className="mb-3">
@@ -175,18 +194,24 @@ const Inquiries = () => {
                 className="form-select"
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
+                disabled={loading}
               >
                 <option value="Pending">Pending</option>
                 <option value="Approved">Approved</option>
                 <option value="Rejected">Rejected</option>
               </select>
             </div>
-            <button className="btn btn-success me-2" onClick={handleUpdate}>
-              Save
+            <button
+              className="btn btn-success me-2"
+              onClick={handleUpdate}
+              disabled={loading}
+            >
+              {loading ? "Saving..." : "Save"}
             </button>
             <button
               className="btn btn-secondary"
               onClick={() => setEditingInquiry(null)}
+              disabled={loading}
             >
               Cancel
             </button>
@@ -197,4 +222,4 @@ const Inquiries = () => {
   );
 };
 
-export default Inquiries;
+export default OwnerInquiries;

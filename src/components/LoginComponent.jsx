@@ -30,10 +30,10 @@ const LoginComponent = () => {
       localStorage.setItem('user', JSON.stringify(user));
       setLoading('')
       if (res.data.user) {
-        if (res.data.user.role === 'user') {
+        if (res.data.user?.role === 'user') {
           console.log('/user-dashboard')
           navigate('/user-dashboard')
-        } if (res.data.user.role === 'owner') {
+        } if (res.data.user?.role === 'owner') {
          console.log('/owner-dashboard')
            navigate('/owner-dashboard')
         }
