@@ -3,6 +3,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const OwnerInquiries = () => {
   const [inquiries, setInquiries] = useState([]);
@@ -16,7 +18,7 @@ const OwnerInquiries = () => {
   const [editingInquiry, setEditingInquiry] = useState(null);
   const [responseText, setResponseText] = useState("");
   const [status, setStatus] = useState("Pending");
-  const [loading, setLoading] = useState(false); // for better UX
+  const [loading, setLoading] = useState(false);
 
   const FetchInquiries = async () => {
     try {
@@ -55,16 +57,12 @@ const OwnerInquiries = () => {
   };
 
   const handleEdit = (inquiryData) => {
-    // This navigates to a separate edit page — can keep if you want
     navigate("/owner-dashboard/inquires/edit", { state: { inquiryData } });
   };
 
   const startEditing = (inquiry) => {
-    // Optional: prevent editing if already approved or rejected
     if (["Approved", "Rejected"].includes(inquiry.status)) {
-      toast.info(
-        "You cannot edit inquiries that are already approved or rejected."
-      );
+      toast.info("You cannot edit inquiries that are already approved or rejected.");
       return;
     }
     setEditingInquiry(inquiry);
@@ -95,44 +93,45 @@ const OwnerInquiries = () => {
   };
 
   return (
-    <div className="container mt-2">
+    <div className="container mt-3">
       <ToastContainer position="top-right" autoClose={3000} />
 
       <nav aria-label="breadcrumb" className="mb-3">
         <ol className="breadcrumb">
           <li className="breadcrumb-item fw-bold">
-            <Link to="/owner-dashboard">Dashboard</Link>
+            <Link to="/owner-dashboard">
+              <i className="bi bi-house-door-fill me-1"></i>Dashboard
+            </Link>
           </li>
-          <li className="breadcrumb-item-active" aria-label="page">
-            /inquiries
+          <li className="breadcrumb-item active" aria-current="page">
+            <i className="bi bi-chat-left-text me-1"></i>Inquiries
           </li>
         </ol>
       </nav>
 
       <div className="card p-4 shadow-sm">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="text-success">
-            <i className="bi bi-building me-2"></i>OwnerInquiries List
+          <h5 className="text-primary fw-semibold">
+            <i className="bi bi-envelope-open-text me-2"></i>User Inquiries to Your Properties
           </h5>
         </div>
 
-        <div className="table-responsive">
-          {inquiries.length === 0 ? (
-            <div className="alert alert-warning text-center">
-              <i className="bi bi-exclamation-circle me-2"></i>No Owner Inquiries
-              Found!
-            </div>
-          ) : (
-            <table className="table table-striped table-hover table-bordered">
-              <thead className="table-success">
+        {inquiries.length === 0 ? (
+          <div className="alert alert-warning text-center">
+            <i className="bi bi-exclamation-circle me-2"></i>No inquiries found.
+          </div>
+        ) : (
+          <div className="table-responsive">
+            <table className="table table-bordered table-hover align-middle">
+              <thead className="table-light">
                 <tr>
                   <th>#</th>
-                  <th>Property</th>
-                  <th>User</th>
-                  <th>Message</th>
-                  <th>Response</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th><i className="bi bi-building me-1"></i>Property</th>
+                  <th><i className="bi bi-person me-1"></i>User</th>
+                  <th><i className="bi bi-chat-left-text me-1"></i>Message</th>
+                  <th><i className="bi bi-reply me-1"></i>Response</th>
+                  <th><i className="bi bi-info-circle me-1"></i>Status</th>
+                  <th><i className="bi bi-tools me-1"></i>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -140,30 +139,30 @@ const OwnerInquiries = () => {
                   <tr key={inquiry._id}>
                     <td>{index + 1}</td>
                     <td>{inquiry.property?.title || "N/A"}</td>
-                    <td>
-                      {inquiry.user?.name || inquiry.user?.email || "N/A"}
-                    </td>
+                    <td>{inquiry.user?.name || inquiry.user?.email || "N/A"}</td>
                     <td>{inquiry.message}</td>
-                    <td>{inquiry.response || "N/A"}</td>
-                    <td>{inquiry.status || "Pending"}</td>
+                    <td>{inquiry.response || <span className="text-muted">No response</span>}</td>
+                    <td>
+                      <span className={`badge bg-${inquiry.status === "Approved" ? "success" : inquiry.status === "Rejected" ? "danger" : "secondary"}`}>
+                        {inquiry.status}
+                      </span>
+                    </td>
                     <td>
                       <button
-                        className="btn btn-sm btn-primary me-2"
+                        className="btn btn-sm btn-outline-primary me-2"
                         onClick={() => startEditing(inquiry)}
-                        disabled={["Approved", "Rejected"].includes(
-                          inquiry.status
-                        )}
+                        disabled={["Approved", "Rejected"].includes(inquiry.status)}
                       >
-                        Respond / Approve
+                        <i className="bi bi-check2-circle me-1"></i>Respond
                       </button>
                       <button
-                        className="btn btn-sm btn-warning me-2"
+                        className="btn btn-sm btn-outline-warning me-2"
                         onClick={() => handleEdit(inquiry)}
                       >
                         <i className="bi bi-pencil-square"></i>
                       </button>
                       <button
-                        className="btn btn-sm btn-danger"
+                        className="btn btn-sm btn-outline-danger"
                         onClick={() => handleDelete(inquiry._id)}
                       >
                         <i className="bi bi-trash"></i>
@@ -173,48 +172,55 @@ const OwnerInquiries = () => {
                 ))}
               </tbody>
             </table>
-          )}
-        </div>
+          </div>
+        )}
 
         {editingInquiry && (
-          <div className="card mt-3 p-3 border-primary">
-            <h5>Respond to Inquiry #{editingInquiry._id}</h5>
-            <div className="mb-3">
-              <label className="form-label">Response</label>
-              <textarea
-                className="form-control"
-                value={responseText}
-                onChange={(e) => setResponseText(e.target.value)}
-                disabled={loading}
-              />
+          <div className="card mt-4 border border-primary">
+            <div className="card-header bg-primary text-white">
+              <i className="bi bi-pencil-square me-2"></i>Respond to Inquiry
             </div>
-            <div className="mb-3">
-              <label className="form-label">Status</label>
-              <select
-                className="form-select"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                disabled={loading}
-              >
-                <option value="Pending">Pending</option>
-                <option value="Approved">Approved</option>
-                <option value="Rejected">Rejected</option>
-              </select>
+            <div className="card-body">
+              <div className="mb-3">
+                <label className="form-label fw-semibold">Response</label>
+                <textarea
+                  className="form-control"
+                  rows={3}
+                  value={responseText}
+                  onChange={(e) => setResponseText(e.target.value)}
+                  disabled={loading}
+                />
+              </div>
+              <div className="mb-3">
+                <label className="form-label fw-semibold">Status</label>
+                <select
+                  className="form-select"
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  disabled={loading}
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Rejected">Rejected</option>
+                </select>
+              </div>
+              <div className="d-flex justify-content-end">
+                <button
+                  className="btn btn-success me-2"
+                  onClick={handleUpdate}
+                  disabled={loading}
+                >
+                  {loading ? "Saving..." : "Save"}
+                </button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setEditingInquiry(null)}
+                  disabled={loading}
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
-            <button
-              className="btn btn-success me-2"
-              onClick={handleUpdate}
-              disabled={loading}
-            >
-              {loading ? "Saving..." : "Save"}
-            </button>
-            <button
-              className="btn btn-secondary"
-              onClick={() => setEditingInquiry(null)}
-              disabled={loading}
-            >
-              Cancel
-            </button>
           </div>
         )}
       </div>

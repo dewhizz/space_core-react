@@ -61,22 +61,22 @@ function App() {
             <Route path="bookings/edit" element={<BookingEdit />} />
           </Route>
 
-          <Route
-            path="/owner-dashboard"
-            element={
-              <ProtectedRoute allowedRoles={["owner"]}>
-                <OwnerLayout />
-              </ProtectedRoute>
-            }
-          >
-            <Route path="owner-inquires" element={<OwnerInquiries />} />
+          {/* Owner Dashboard Routes */}
+        <Route
+          path="/owner-dashboard"
+          element={
+            <ProtectedRoute allowedRoles={["owner"]}>
+              <OwnerLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="owner-inquires" element={<OwnerInquiries />} />
+          <Route path="properties" element={<Properties />} />
+          <Route path="properties/add" element={<PropertyAdd />} />
+          <Route path="properties/edit" element={<PropertyEdit />} />
+          <Route path="bookings" element={<OwnerBookings />} />
+        </Route>
 
-            <Route path="properties" element={<Properties />} />
-            <Route path="properties/add" element={<PropertyAdd />} />
-            <Route path="properties/edit" element={<PropertyEdit />} />
-
-            <Route path="bookings" element={<OwnerBookings />} />
-          </Route>
 
           {/* Other Routes */}
           <Route path="/not-authorized" element={<NotAuthorized />} />

@@ -17,7 +17,7 @@ const OwnerBookings = () => {
     try {
       toast.info("Loading bookings...");
       const res = await axios.get(
-        "https://space-core.onrender.com/api/booking/owner-bookings",
+        "https://space-core.onrender.com/api/booking/my-bookings",
         authHeader
       );
       setBookings(res.data);
@@ -69,7 +69,7 @@ const OwnerBookings = () => {
 
         {bookings.length === 0 ? (
           <div className="alert alert-warning text-center">
-            <i className="bi bi-exclamation-circle me-2"></i>No Bookings Found!
+            <i className="bi bi-exclamation-circle me-2"></i>No Owner Bookings Found!
           </div>
         ) : (
           <div className="table-responsive">

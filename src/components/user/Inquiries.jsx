@@ -3,6 +3,7 @@ import { AuthContext } from '../../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
@@ -15,17 +16,16 @@ const Inquiries = () => {
 
   const FetchInquiries = async () => {
     try {
-      toast.info('Loading Your Inquires ......');
+      toast.info('Loading Your Inquiries...');
       const res = await axios.get(
         "https://space-core.onrender.com/api/inquiries/my-inquires",
         authHeader
       );
       setInquiries(res.data);
-      console.log(res.data);
       toast.dismiss();
     } catch (error) {
       toast.dismiss();
-      toast.error(error.response?.data?.message || "Failed to load Inquires");
+      toast.error(error.response?.data?.message || "Failed to load inquiries");
     }
   };
 
@@ -34,64 +34,63 @@ const Inquiries = () => {
   }, []);
 
   const handleDelete = async (id) => {
-    try {
-      if (window.confirm('Delete this Inquiry')) {
-        try {
-          toast.warning('Deleting Credentials');
-          const res = await axios.delete(`https://space-core.onrender.com/api/my-inquiries/${id}`, authHeader);
-          toast.info(res.data.message);
-        } catch (error) {
-          toast.dismiss();
-          toast.error(error.response?.data?.message);
-        }
+    if (window.confirm('Delete this inquiry?')) {
+      try {
+        toast.warning('Deleting inquiry...');
+        const res = await axios.delete(`https://space-core.onrender.com/api/my-inquiries/${id}`, authHeader);
+        toast.success(res.data.message);
+        FetchInquiries();
+      } catch (error) {
+        toast.dismiss();
+        toast.error(error.response?.data?.message);
       }
-    } catch (err) {
-      console.error(err);
     }
   };
 
-    // handle edit
   const handleEdit = (inquiryData) => {
     navigate("/user-dashboard/inquires/edit", { state: { inquiryData } });
   };
 
   return (
-    <div className="container mt-2">
+    <div className="container mt-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <nav aria-label="breadcrumb" className="mb-3">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item fw-bold">
-            <Link to="/user-dashboard">Dashboard</Link>
-          </li>
-          <li className="breadcrumb-item-active" aria-label="page">
-            /inquires
-          </li>
-        </ol>
-      </nav>
+      {/* Breadcrumbs and Header */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item fw-bold">
+              <Link to="/user-dashboard" className="text-success">Dashboard</Link>
+            </li>
+            <li className="breadcrumb-item active" aria-current="page">
+              /inquiries
+            </li>
+          </ol>
+        </nav>
+        <button
+          className="btn btn-success"
+          onClick={() => navigate("/user-dashboard/inquires/add")}
+        >
+          <i className="bi bi-plus-circle-fill me-2"></i> Add Inquiry
+        </button>
+      </div>
 
-      <div className="card p-4 shadow-sm">
+      {/* Inquiry Table */}
+      <div className="card shadow-sm p-4 mb-4" style={{ borderRadius: '12px' }}>
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="text-success">
-            <i className="bi bi-building me-2"></i>Inquires List
+          <h5 className="text-success fw-semibold">
+            <i className="bi bi-envelope-paper-fill me-2"></i> My Inquiries
           </h5>
-          <button
-            className="btn btn-success"
-            onClick={() => navigate("/user-dashboard/inquires/add")}
-          >
-            <i className="bi bi-plus-circle"></i> Add Inquiry
-          </button>
         </div>
 
         <div className="table-responsive">
           {inquiries.length === 0 ? (
             <div className="alert alert-warning text-center">
-              <i className="bi bi-exclamation-circle me-2"></i>No Inquiries
-              Found!
+              <i className="bi bi-exclamation-triangle-fill me-2"></i>No inquiries found!
             </div>
           ) : (
-            <table className="table table-striped table-hover table-bordered">
-              <thead className="table-success">
+            <table className="table table-hover table-bordered">
+              <thead className="table-light">
                 <tr>
                   <th>#</th>
                   <th>Property</th>
@@ -102,23 +101,33 @@ const Inquiries = () => {
                 </tr>
               </thead>
               <tbody>
-                {inquiries.map((inquires, index) => (
-                  <tr key={inquires._id}>
+                {inquiries.map((inq, index) => (
+                  <tr key={inq._id}>
                     <td>{index + 1}</td>
-                    <td>{inquires.property?.title || "N/A"}</td>
-                    <td>{inquires.message}</td>
-                    <td>{inquires.response ||"N/A"}</td>
-                    <td>{inquires.status ||"Pending"}</td>
+                    <td>{inq.property?.title || "N/A"}</td>
+                    <td>{inq.message}</td>
+                    <td>{inq.response || "N/A"}</td>
                     <td>
-                      <button className="btn btn-sm btn-warning me-2"
-                      onClick={()=>handleEdit(inquires)}>
+                      <span
+                        className={`badge ${
+                          inq.status === 'approved' ? 'bg-success' : 'bg-warning'
+                        }`}
+                      >
+                        {inq.status || "Pending"}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-outline-primary me-2"
+                        onClick={() => handleEdit(inq)}
+                      >
                         <i className="bi bi-pencil-square"></i>
                       </button>
                       <button
-                        className="btn btn-sm btn-danger me-2"
-                        onClick={() => handleDelete(inquires._id)}
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => handleDelete(inq._id)}
                       >
-                        <i className="bi bi-trash"></i>
+                        <i className="bi bi-trash-fill"></i>
                       </button>
                     </td>
                   </tr>

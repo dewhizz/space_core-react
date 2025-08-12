@@ -1,126 +1,156 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { motion } from "framer-motion";
 
 const SideBar = () => {
-  const [showSwitchOption, setShowSwitchOption] = useState(true);
+  const [showSwitchOption, setShowSwitchOption] = useState(false);
   const navigate = useNavigate();
+  const { logout, user } = useContext(AuthContext);
 
-  // Simulate user property status. Replace this with your real check
-  const hasAddedProperty = true; // change this to true to test different flows
+  const hasAddedProperty = true;
 
   const handleSwitchClick = () => {
     if (hasAddedProperty) {
-      navigate("/owner-dashboard"); 
+      navigate("/owner-dashboard");
     }
   };
 
-  const { logout } = useContext(AuthContext);
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning";
+    if (hour < 18) return "Good afternoon";
+    return "Good evening";
+  };
+
   return (
-    <div
-      className="text-light d-flex flex-column p-3"
+    <motion.div
+      initial={{ x: -250, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      className="d-flex flex-column justify-content-between p-4 text-light"
       style={{
         width: "250px",
-        background: "linear-gradient(135deg, #0A1F44, #555555)",
         height: "100vh",
-        justifyContent: "space-between",
+        background: "linear-gradient(135deg, #0A1F44, #555555)",
+        backdropFilter: "blur(8px)",
+        boxShadow: "0 0 10px rgba(0,0,0,0.3)",
+        fontFamily: "Poppins, sans-serif",
       }}
     >
+      {/* Top Section */}
       <div>
-        <h4 className="text-center mb-4">
-          <i className="bi bi-speedometer me-2" /> User Panel
-        </h4>
+        {/* Greeting with animated wave */}
+        <div className="text-center mb-4">
+          <h5 className="fw-bold">
+            {getGreeting()}, {user?.name || "Guest"}{" "}
+            <motion.span
+              initial={{ rotate: 0 }}
+              animate={{ rotate: [0, 20, -10, 20, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
+              style={{ display: "inline-block" }}
+            >
+              👋
+            </motion.span>
+          </h5>
+          <small className="text-muted">Welcome back to your dashboard</small>
+        </div>
+
+        {/* Navigation */}
         <ul className="nav nav-pills flex-column mb-auto">
-          <li className="nav-item mb-4">
+          <li className="nav-item mb-3" title="Go to Dashboard">
             <NavLink
               to="/user-dashboard"
               end
               className={({ isActive }) =>
-                isActive
-                  ? "nav-link bg-dark text-light fw-bold"
-                  : "nav-link text-light"
+                `nav-link d-flex align-items-center gap-2 px-3 py-2 rounded ${
+                  isActive ? "bg-warning text-dark fw-bold shadow-sm border-start border-4 border-light" : "text-light"
+                }`
               }
             >
-              <i className="bi bi-ui-checks-grid"></i> DashBoard
+              <i className="bi bi-speedometer2" title="Dashboard"></i> Dashboard
             </NavLink>
           </li>
 
-          <li className="nav-item">
+          <li className="nav-item mb-3" title="View your inquiries">
             <NavLink
               to="/user-dashboard/inquires"
               end
               className={({ isActive }) =>
-                isActive
-                  ? "nav-link bg-dark text-light fw-bold"
-                  : "nav-link text-light"
+                `nav-link d-flex align-items-center gap-2 px-3 py-2 rounded ${
+                  isActive ? "bg-warning text-dark fw-bold shadow-sm border-start border-4 border-light" : "text-light"
+                }`
               }
             >
-              <i className="bi bi-question-octagon-fill"></i> My Inquires
+              <i className="bi bi-chat-left-text-fill" title="My Inquiries"></i> My Inquiries
             </NavLink>
           </li>
 
-          <li className="nav-item">
+          <li className="nav-item mb-3" title="Check your bookings">
             <NavLink
               to="/user-dashboard/bookings"
               end
               className={({ isActive }) =>
-                isActive
-                  ? "nav-link bg-dark text-light fw-bold"
-                  : "nav-link text-light"
+                `nav-link d-flex align-items-center gap-2 px-3 py-2 rounded ${
+                  isActive ? "bg-warning text-dark fw-bold shadow-sm border-start border-4 border-light" : "text-light"
+                }`
               }
             >
-              <i className="bi bi-clock-history me-2"></i> My Bookings
+              <i className="bi bi-calendar-check-fill" title="My Bookings"></i> My Bookings
             </NavLink>
           </li>
         </ul>
       </div>
 
-      {/* Bottom gear icon */}
+      {/* Bottom Section */}
       <div style={{ position: "relative" }}>
-        {/* Gear Icon Button */}
+        {/* Gear Icon */}
         <button
           className="btn btn-link text-light"
           onClick={() => setShowSwitchOption(!showSwitchOption)}
           style={{ textDecoration: "none" }}
+          title="Settings"
         >
-          <i className="bi bi-gear-fill fs-4"></i>
+          <i className="bi bi-sliders fs-4"></i>
         </button>
 
         {/* Dropdown Menu */}
         {showSwitchOption && (
           <div
-            className="bg-dark p-2 rounded"
+            className="bg-dark p-3 rounded shadow"
             style={{
               position: "absolute",
-              bottom: "40px",
+              bottom: "50px",
               left: 0,
-              minWidth: "180px",
-              zIndex: 10,
+              minWidth: "200px",
+              zIndex: 100,
+              border: "1px solid #444",
             }}
           >
-            {/* Switch Option */}
             <div
-              className="text-light py-1 px-2"
-              style={{ cursor: "pointer" }}
+              className="text-light py-2 px-3 rounded"
+              style={{ cursor: "pointer", transition: "0.3s" }}
               onClick={handleSwitchClick}
+              onMouseEnter={(e) => (e.target.style.backgroundColor = "#333")}
+              onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
+              title="Switch to Owner Dashboard"
             >
-              Switch to Owner Dashboard
+              <i className="bi bi-arrow-left-right me-2"></i> Switch to Owner Dashboard
             </div>
 
-            {/* Divider */}
             <hr className="text-secondary my-2" />
 
-            {/* Logout Button */}
             <button
-              className="btn btn-sm btn-outline-danger w-100"
+              className="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2"
               onClick={logout}
+              title="Logout"
             >
-              <i className="bi bi-box-arrow-right me-2"></i>Logout
+              <i className="bi bi-door-open-fill"></i> Logout
             </button>
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 

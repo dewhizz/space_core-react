@@ -1,0 +1,72 @@
+/* OwnerInquiries.css */
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f8f9fa;
+}
+
+.owner-inquiries .card {
+  border: 2px solid transparent;
+  border-image: linear-gradient(to right, #ee0979, #ff6a00);
+  border-image-slice: 1;
+  border-radius: 12px;
+  background-color: #fff;
+}
+
+.owner-inquiries .card-header {
+  background: linear-gradient(to right, #ee0979, #ff6a00);
+  color: white;
+  font-weight: 600;
+}
+
+.owner-inquiries .table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.owner-inquiries .table td {
+  vertical-align: middle;
+}
+
+.owner-inquiries .btn-outline-primary {
+  border-color: #ee0979;
+  color: #ee0979;
+}
+
+.owner-inquiries .btn-outline-primary:hover {
+  background-color: #ee0979;
+  color: white;
+}
+
+.owner-inquiries .btn-outline-warning {
+  border-color: #ff6a00;
+  color: #ff6a00;
+}
+
+.owner-inquiries .btn-outline-warning:hover {
+  background-color: #ff6a00;
+  color: white;
+}
+
+.owner-inquiries .btn-outline-danger {
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+.owner-inquiries .btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.owner-inquiries .form-label {
+  font-weight: 600;
+}
+
+.owner-inquiries .breadcrumb-item a {
+  color: #ee0979;
+  text-decoration: none;
+}
+
+.owner-inquiries .breadcrumb-item.active {
+  color: #ff6a00;
+}
