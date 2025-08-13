@@ -9,43 +9,49 @@ const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [pageStatus, setPageStatus] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
+  const inquiriesRef = useRef(null);
 
-  const inquiriesRef = useRef(null); // for measuring inquiries container
-
-  const limit = 5; // inquiries per page
-
+  const limit = 5;
   const authHeader = {
     headers: { Authorization: `Bearer ${token}` },
   };
 
   const FetchInquiries = async (pageNumber = 1) => {
     try {
+      setLoading(true);
       toast.info("Loading Your Inquiries...");
-      const res = await axios.get(
-        `https://space-core.onrender.com/api/inquiries/my-inquires?page=${pageNumber}&limit=${limit}`,
-        authHeader
-      );
+
+      const endpoint = pageStatus
+        ? `https://space-core.onrender.com/api/inquiries/my-inquiries/filter?status=${pageStatus}&page=${pageNumber}&limit=${limit}`
+        : `https://space-core.onrender.com/api/inquiries/my-inquires?page=${pageNumber}&limit=${limit}`;
+
+      const res = await axios.get(endpoint, authHeader);
       setInquiries(res.data.inquiries || res.data);
       setTotalPages(res.data.totalPages || 1);
       toast.dismiss();
     } catch (error) {
       toast.dismiss();
       toast.error(error.response?.data?.message || "Failed to load inquiries");
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     FetchInquiries(page);
-  }, [page]);
+  }, [page, pageStatus]);
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
     if (inquiriesRef.current) {
       const inquiriesHeight = inquiriesRef.current.offsetHeight;
-
-      const footerHeight = 40; // adjust to match your sidebar footer height
-      const sidebarHeight = window.innerHeight - footerHeight;
+      const sidebarHeight = window.innerHeight - 80;
 
       if (inquiriesHeight > sidebarHeight && page < totalPages) {
         setPage((prevPage) => prevPage + 1);
@@ -84,7 +90,7 @@ const Inquiries = () => {
     <div
       ref={inquiriesRef}
       className="container mt-4"
-      style={{ fontFamily: "Poppins, sans-serif" }}
+      style={{ fontFamily: "Poppins, sans-serif", minHeight: "100vh" }}
     >
       <ToastContainer position="top-right" autoClose={3000} />
 
@@ -110,19 +116,49 @@ const Inquiries = () => {
         </button>
       </div>
 
-      {/* Inquiry Table */}
+      {/* Inquiry Card */}
       <div className="card shadow-sm p-4 mb-4" style={{ borderRadius: "12px" }}>
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h5 className="text-success fw-semibold">
             <i className="bi bi-envelope-paper-fill me-2"></i> My Inquiries
+            <span className="badge bg-secondary ms-2">{inquiries.length}</span>
           </h5>
         </div>
 
+        {/* Status Filter Tabs */}
+        <div className="mb-3 d-flex gap-2 flex-wrap">
+          {["All", "pending", "approved", "declined"].map((status) => (
+            <button
+              key={status}
+              className={`btn btn-sm ${
+                status.toLowerCase() === pageStatus?.toLowerCase()
+                  ? "btn-success"
+                  : "btn-outline-success"
+              }`}
+              onClick={() => {
+                setPageStatus(status === "All" ? "" : status);
+                setPage(1);
+              }}
+            >
+              {status}
+            </button>
+          ))}
+        </div>
+
         <div className="table-responsive">
-          {inquiries.length === 0 ? (
-            <div className="alert alert-warning text-center">
-              <i className="bi bi-exclamation-triangle-fill me-2"></i>No
-              inquiries found!
+          {loading ? (
+            <div className="text-center py-5">
+              <div className="spinner-border text-success" role="status"></div>
+              <p className="mt-3">Fetching inquiries...</p>
+            </div>
+          ) : inquiries.length === 0 ? (
+            <div className="text-center py-5">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+                alt="No inquiries"
+                style={{ width: "120px", opacity: 0.6 }}
+              />
+              <p className="mt-3 text-muted">No inquiries found!</p>
             </div>
           ) : (
             <>
@@ -149,6 +185,8 @@ const Inquiries = () => {
                           className={`badge ${
                             inq.status === "approved"
                               ? "bg-success"
+                              : inq.status === "declined"
+                              ? "bg-danger"
                               : "bg-warning"
                           }`}
                         >

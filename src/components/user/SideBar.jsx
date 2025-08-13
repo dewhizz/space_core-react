@@ -44,7 +44,7 @@ const SideBar = () => {
               👋
             </motion.span>
           </h5>
-          <small className="text-muted">Welcome back to your dashboard</small>
+          <small className="text-warning">Welcome back to your dashboard</small>
         </div>
 
         {/* Navigation */}
