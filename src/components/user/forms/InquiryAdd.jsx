@@ -46,7 +46,7 @@ const InquiryAdd = () => {
         authHeader
       );
       toast.dismiss();
-      toast.success(res.data.message || "Inquiry added Successfully");
+      toast.success(res.data.message || "Inquiry added successfully");
       setMessage("");
       setProperties([]);
       setSelectedPropertyId("");
@@ -59,29 +59,57 @@ const InquiryAdd = () => {
   };
 
   return (
-    <div className="container mt-3">
+    <div className="container mt-3" style={{ fontFamily: "Inter, sans-serif" }}>
       <ToastContainer position="top-right" autoClose={3000} />
 
       {/* Breadcrumbs */}
       <nav aria-label="breadcrumb" className="mb-3">
         <ol className="breadcrumb">
-          <li className="breadcrumb-item fw-bold">
-            <Link to="/user-dashboard">Dashboard</Link>
+          <li className="breadcrumb-item">
+            <Link
+              className="text-decoration-none fw-semibold"
+              to="/user-dashboard"
+              style={{ color: "#00b894" }}
+            >
+              Dashboard
+            </Link>
           </li>
-          <li className="breadcrumb-item text-muted">/inquires</li>
-          <li className="breadcrumb-item fw-bold">
-            <Link to="/user-dashboard/inquires/add">Add Inquiry</Link>
+          <li className="breadcrumb-item">
+            <Link
+              className="text-decoration-none fw-semibold"
+              to="/user-dashboard/inquires"
+              style={{ color: "#00b894" }}
+            >
+              Inquiries
+            </Link>
+          </li>
+          <li
+            className="breadcrumb-item active fw-semibold"
+            aria-current="page"
+            style={{ color: "#00b894" }}
+          >
+            Add Inquiry
           </li>
         </ol>
       </nav>
 
       {/* Inquiry Form */}
-      <div className="card p-4 shadow-sm mb-4">
+      <div
+        className="card p-4 shadow-sm mb-4"
+        style={{
+          backgroundColor: "#f8f9fa",
+          border: "1px solid #14532d",
+        }}
+      >
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="text-success">
+          <h5 style={{ color: "#1e8449" }}>
             <i className="bi bi-building me-2"></i>Add New Inquiry
           </h5>
-          <Link className="btn btn-success" to={"/user-dashboard/inquires"}>
+          <Link
+            className="btn"
+            to="/user-dashboard/inquires"
+            style={{ backgroundColor: "#1e8449", color: "#fff" }}
+          >
             <i className="bi bi-arrow-left-circle-fill me-2"></i>Back
           </Link>
         </div>
@@ -119,9 +147,13 @@ const InquiryAdd = () => {
           {/* Preview Trigger */}
           <button
             type="button"
-            className="btn btn-success"
+            className="btn"
             data-bs-toggle="modal"
             data-bs-target="#previewModal"
+            style={{
+              backgroundColor: "#4b0082",
+              color: "#fff",
+            }}
             disabled={!message || !selectedPropertyId}
           >
             <i className="bi bi-eye-fill me-2"></i>Preview Inquiry
@@ -139,13 +171,16 @@ const InquiryAdd = () => {
       >
         <div className="modal-dialog">
           <form className="modal-content" onSubmit={handleSubmit}>
-            <div className="modal-header">
+            <div
+              className="modal-header"
+              style={{ backgroundColor: "#1a237e", color: "#fff" }}
+            >
               <h5 className="modal-title" id="previewModalLabel">
                 <i className="bi bi-eye-fill me-2"></i>Preview Inquiry
               </h5>
               <button
                 type="button"
-                className="btn-close"
+                className="btn-close btn-close-white"
                 data-bs-dismiss="modal"
                 aria-label="Close"
               ></button>
@@ -156,10 +191,8 @@ const InquiryAdd = () => {
               </p>
               <p>
                 <strong>Property:</strong>{" "}
-                {
-                  properties.find((p) => p._id === selectedPropertyId)?.title ||
-                  "Not selected"
-                }
+                {properties.find((p) => p._id === selectedPropertyId)?.title ||
+                  "Not selected"}
               </p>
             </div>
             <div className="modal-footer">
@@ -170,7 +203,11 @@ const InquiryAdd = () => {
               >
                 Close
               </button>
-              <button type="submit" className="btn btn-success">
+              <button
+                type="submit"
+                className="btn"
+                style={{ backgroundColor: "#00b894", color: "#fff" }}
+              >
                 <i className="bi bi-send-fill me-2"></i>Confirm & Submit
               </button>
             </div>
@@ -180,8 +217,10 @@ const InquiryAdd = () => {
 
       {/* Floating Action Button */}
       <button
-        className="btn btn-primary rounded-circle shadow-lg"
+        className="btn rounded-circle shadow-lg"
         style={{
+          backgroundColor: "#d35400",
+          color: "#fff",
           position: "fixed",
           bottom: "20px",
           right: "20px",
@@ -190,7 +229,9 @@ const InquiryAdd = () => {
           zIndex: "1000",
         }}
         onClick={() => {
-          document.querySelector("form")?.scrollIntoView({ behavior: "smooth" });
+          document
+            .querySelector("form")
+            ?.scrollIntoView({ behavior: "smooth" });
         }}
       >
         <i className="bi bi-plus-lg fs-4"></i>

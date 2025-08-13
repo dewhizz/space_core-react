@@ -1,20 +1,11 @@
-import React, { useContext, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useContext } from "react";
+import { NavLink } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { motion } from "framer-motion";
+import { House, ChatText, CalendarCheck } from "phosphor-react";
 
 const SideBar = () => {
-  const [showSwitchOption, setShowSwitchOption] = useState(false);
-  const navigate = useNavigate();
-  const { logout, user } = useContext(AuthContext);
-
-  const hasAddedProperty = true;
-
-  const handleSwitchClick = () => {
-    if (hasAddedProperty) {
-      navigate("/owner-dashboard");
-    }
-  };
+  const { user } = useContext(AuthContext);
 
   const getGreeting = () => {
     const hour = new Date().getHours();
@@ -40,7 +31,7 @@ const SideBar = () => {
     >
       {/* Top Section */}
       <div>
-        {/* Greeting with animated wave */}
+        {/* Greeting */}
         <div className="text-center mb-4">
           <h5 className="fw-bold">
             {getGreeting()}, {user?.name || "Guest"}{" "}
@@ -58,98 +49,58 @@ const SideBar = () => {
 
         {/* Navigation */}
         <ul className="nav nav-pills flex-column mb-auto">
-          <li className="nav-item mb-3" title="Go to Dashboard">
+          <li className="nav-item mb-3">
             <NavLink
               to="/user-dashboard"
               end
               className={({ isActive }) =>
                 `nav-link d-flex align-items-center gap-2 px-3 py-2 rounded ${
-                  isActive ? "bg-warning text-dark fw-bold shadow-sm border-start border-4 border-light" : "text-light"
+                  isActive
+                    ? "bg-warning text-dark fw-bold shadow-sm border-start border-4 border-light"
+                    : "text-light"
                 }`
               }
             >
-              <i className="bi bi-speedometer2" title="Dashboard"></i> Dashboard
+              <House size={20} weight="fill" /> Dashboard
             </NavLink>
           </li>
 
-          <li className="nav-item mb-3" title="View your inquiries">
+          <li className="nav-item mb-3">
             <NavLink
               to="/user-dashboard/inquires"
               end
               className={({ isActive }) =>
                 `nav-link d-flex align-items-center gap-2 px-3 py-2 rounded ${
-                  isActive ? "bg-warning text-dark fw-bold shadow-sm border-start border-4 border-light" : "text-light"
+                  isActive
+                    ? "bg-warning text-dark fw-bold shadow-sm border-start border-4 border-light"
+                    : "text-light"
                 }`
               }
             >
-              <i className="bi bi-chat-left-text-fill" title="My Inquiries"></i> My Inquiries
+              <ChatText size={20} weight="fill" /> My Inquiries
             </NavLink>
           </li>
 
-          <li className="nav-item mb-3" title="Check your bookings">
+          <li className="nav-item mb-3">
             <NavLink
               to="/user-dashboard/bookings"
               end
               className={({ isActive }) =>
                 `nav-link d-flex align-items-center gap-2 px-3 py-2 rounded ${
-                  isActive ? "bg-warning text-dark fw-bold shadow-sm border-start border-4 border-light" : "text-light"
+                  isActive
+                    ? "bg-warning text-dark fw-bold shadow-sm border-start border-4 border-light"
+                    : "text-light"
                 }`
               }
             >
-              <i className="bi bi-calendar-check-fill" title="My Bookings"></i> My Bookings
+              <CalendarCheck size={20} weight="fill" /> My Bookings
             </NavLink>
           </li>
         </ul>
       </div>
 
-      {/* Bottom Section */}
-      <div style={{ position: "relative" }}>
-        {/* Gear Icon */}
-        <button
-          className="btn btn-link text-light"
-          onClick={() => setShowSwitchOption(!showSwitchOption)}
-          style={{ textDecoration: "none" }}
-          title="Settings"
-        >
-          <i className="bi bi-sliders fs-4"></i>
-        </button>
-
-        {/* Dropdown Menu */}
-        {showSwitchOption && (
-          <div
-            className="bg-dark p-3 rounded shadow"
-            style={{
-              position: "absolute",
-              bottom: "50px",
-              left: 0,
-              minWidth: "200px",
-              zIndex: 100,
-              border: "1px solid #444",
-            }}
-          >
-            <div
-              className="text-light py-2 px-3 rounded"
-              style={{ cursor: "pointer", transition: "0.3s" }}
-              onClick={handleSwitchClick}
-              onMouseEnter={(e) => (e.target.style.backgroundColor = "#333")}
-              onMouseLeave={(e) => (e.target.style.backgroundColor = "transparent")}
-              title="Switch to Owner Dashboard"
-            >
-              <i className="bi bi-arrow-left-right me-2"></i> Switch to Owner Dashboard
-            </div>
-
-            <hr className="text-secondary my-2" />
-
-            <button
-              className="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center gap-2"
-              onClick={logout}
-              title="Logout"
-            >
-              <i className="bi bi-door-open-fill"></i> Logout
-            </button>
-          </div>
-        )}
-      </div>
+      {/* Footer or spacer */}
+      <div className="text-center text-muted small mt-4">v1.0</div>
     </motion.div>
   );
 };

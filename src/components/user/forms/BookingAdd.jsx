@@ -75,33 +75,52 @@ const BookingAdd = () => {
   };
 
   return (
-    <div className="container mt-3">
+    <div className="container mt-3" style={{ fontFamily: "Inter, sans-serif" }}>
       <ToastContainer position="top-right" autoClose={3000} />
 
+      {/* Breadcrumbs */}
       <nav aria-label="breadcrumb" className="mb-3">
         <ol className="breadcrumb">
-          <li className="breadcrumb-item fw-bold">
-            <Link to="/user-dashboard">Dashboard</Link>
+          <li className="breadcrumb-item">
+            <Link
+              className="text-decoration-none fw-semibold"
+              to="/user-dashboard"
+              style={{ color: "#00b894" }}
+            >
+              Dashboard
+            </Link>
           </li>
-          <li className="breadcrumb-item active" aria-current="page">
-            Bookings
+          <li className="breadcrumb-item">
+            <Link
+              className="text-decoration-none fw-semibold"
+              to="/user-dashboard/bookings"
+              style={{ color: "#00b894" }}
+            >
+              Bookings
+            </Link>
           </li>
-          <li className="breadcrumb-item fw-bold">
-            <Link to="#">Add Booking</Link>
+          <li
+            className="breadcrumb-item active fw-semibold"
+            aria-current="page"
+            style={{ color: "#00b894" }}
+          >
+            Add Booking
           </li>
         </ol>
       </nav>
 
-      <div className="card p-4 shadow-sm mb-4">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="text-success">
-            <i className="bi bi-building me-2"></i>Add New Booking
-          </h5>
-          <Link className="btn btn-success" to={"/user-dashboard/bookings"}>
-            <i className="bi bi-arrow-left-circle-fill me-2"></i>Back
-          </Link>
-        </div>
+      {/* Header: Title + Back Button */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <h5 className="text-success">
+          <i className="bi bi-building me-2"></i>Add New Booking
+        </h5>
+        <Link className="btn btn-success" to={"/user-dashboard/bookings"}>
+          <i className="bi bi-arrow-left-circle-fill me-2"></i>Back
+        </Link>
+      </div>
 
+      {/* Booking Form */}
+      <div className="card p-4 shadow-sm mb-4">
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">

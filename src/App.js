@@ -15,6 +15,7 @@ import RegisterComponent from "./components/RegisterComponent";
 import AboutUs from "./components/AboutUs";
 import NotAuthorized from "./components/NotAuthorized";
 import NotFound from "./components/NotFound";
+import GetProperties from "./components/GetProperties";
 
 import UserLayout from "./components/user/UserLayout";
 import Inquiries from "./components/user/Inquiries";
@@ -23,15 +24,17 @@ import InquiryEdit from "./components/user/forms/InquiryEdit";
 import Bookings from "./components/user/Bookings";
 import BookingAdd from "./components/user/forms/BookingAdd";
 import BookingEdit from "./components/user/forms/BookingEdit";
+import UserDashBoard from "./components/user/UserDashBoard";
 
 
 // Assuming you have this component, or create a simple one for owners
 import OwnerLayout from "./components/owner/OwnerLayout";
 import PropertyAdd from "./components/owner/forms/PropertyAdd";
-import Properties from "./components/owner/Properties";
 import OwnerInquiries from "./components/owner/OwnerInquires";
 import PropertyEdit from "./components/owner/forms/PropertyEdit";
 import OwnerBookings from "./components/owner/OwnerBookings";
+
+
 
 function App() {
   return (
@@ -52,6 +55,9 @@ function App() {
               </ProtectedRoute>
             }
           >
+
+            <Route path="" element={<UserDashBoard />}/>
+
             <Route path="inquires" element={<Inquiries />} />
             <Route path="inquires/add" element={<InquiryAdd />} />
             <Route path="inquires/edit" element={<InquiryEdit />} />
@@ -61,22 +67,22 @@ function App() {
             <Route path="bookings/edit" element={<BookingEdit />} />
           </Route>
 
-          {/* Owner Dashboard Routes */}
-        <Route
-          path="/owner-dashboard"
-          element={
-            <ProtectedRoute allowedRoles={["owner"]}>
-              <OwnerLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="owner-inquires" element={<OwnerInquiries />} />
-          <Route path="properties" element={<Properties />} />
-          <Route path="properties/add" element={<PropertyAdd />} />
-          <Route path="properties/edit" element={<PropertyEdit />} />
-          <Route path="bookings" element={<OwnerBookings />} />
-        </Route>
+          <Route path="get-properties" element={<GetProperties />} />
 
+          {/* Owner Dashboard Routes */}
+          <Route
+            path="/owner-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={["owner"]}>
+                <OwnerLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route path="owner-inquires" element={<OwnerInquiries />} />
+            <Route path="properties/add" element={<PropertyAdd />} />
+            <Route path="properties/edit" element={<PropertyEdit />} />
+            <Route path="bookings" element={<OwnerBookings />} />
+          </Route>
 
           {/* Other Routes */}
           <Route path="/not-authorized" element={<NotAuthorized />} />
