@@ -1,6 +1,13 @@
-import React, { createContext, useCallback, useState, useEffect } from "react";
+import React, {
+  createContext,
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+} from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { io } from "socket.io-client";
 
 // Create context
 export const AuthContext = createContext();
@@ -8,27 +15,31 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
-  // Initialize token from localStorage
   const [token, setToken] = useState(() => localStorage.getItem("token") || "");
-
-  // Initialize user from localStorage
   const [user, setUser] = useState(() => {
     try {
       const stored = localStorage.getItem("user");
       if (!stored) return null;
-      const parsed = JSON.parse(stored);
-      return parsed ?? null;
+      return JSON.parse(stored);
     } catch (err) {
       console.error("Failed to parse user from localStorage:", err);
       return null;
     }
   });
 
+  const socketRef = useRef(null);
+
   // Logout function
   const logout = useCallback(() => {
     localStorage.clear();
     setToken("");
     setUser(null);
+
+    if (socketRef.current) {
+      socketRef.current.disconnect();
+      socketRef.current = null;
+    }
+
     navigate("/login");
   }, [navigate]);
 
@@ -47,9 +58,44 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, logout]);
 
-  // Provide context
+  // Connect socket when user is available
+  useEffect(() => {
+    if (user?.userId && !socketRef.current) {
+      socketRef.current = io("https://space-core.onrender.com", {
+        query: { userId: user.userId },
+        transports: ["websocket"],
+      });
+
+      socketRef.current.emit("joinRoom", user.userId);
+
+      socketRef.current.on("connect", () => {
+        console.log("Socket connected:", socketRef.current.id);
+      });
+
+      socketRef.current.on("disconnect", () => {
+        console.log("Socket disconnected");
+      });
+    }
+
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
+  }, [user]);
+
   return (
-    <AuthContext.Provider value={{ token, setToken, user, setUser, logout }}>
+    <AuthContext.Provider
+      value={{
+        token,
+        setToken,
+        user,
+        setUser,
+        logout,
+        socket: socketRef.current,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

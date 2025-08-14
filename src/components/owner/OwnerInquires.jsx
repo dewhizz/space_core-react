@@ -5,9 +5,13 @@ import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 
-
 const OwnerInquiries = () => {
   const [inquiries, setInquiries] = useState([]);
+  const [editingInquiry, setEditingInquiry] = useState(null);
+  const [responseText, setResponseText] = useState("");
+  const [status, setStatus] = useState("pending");
+  const [loading, setLoading] = useState(false);
+
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -15,14 +19,9 @@ const OwnerInquiries = () => {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const [editingInquiry, setEditingInquiry] = useState(null);
-  const [responseText, setResponseText] = useState("");
-  const [status, setStatus] = useState("Pending");
-  const [loading, setLoading] = useState(false);
-
-  const FetchInquiries = async () => {
+  const fetchInquiries = async () => {
     try {
-      toast.info("Loading your inquiries...");
+      toast.info("Loading inquiries...");
       const res = await axios.get(
         "https://space-core.onrender.com/api/inquiries/owner-inquires",
         authHeader
@@ -36,38 +35,38 @@ const OwnerInquiries = () => {
   };
 
   useEffect(() => {
-    FetchInquiries();
+    fetchInquiries();
   }, []);
 
   const handleDelete = async (id) => {
-    try {
-      if (window.confirm("Delete this inquiry?")) {
+    if (window.confirm("Delete this inquiry?")) {
+      try {
         toast.warning("Deleting inquiry...");
         const res = await axios.delete(
           `https://space-core.onrender.com/api/inquiries/${id}`,
           authHeader
         );
-        toast.info(res.data.message);
-        FetchInquiries();
+        toast.success(res.data.message);
+        fetchInquiries();
+      } catch (error) {
+        toast.dismiss();
+        toast.error(error.response?.data?.message || "Delete failed");
       }
-    } catch (error) {
-      toast.dismiss();
-      toast.error(error.response?.data?.message || "Delete failed");
     }
   };
 
   const handleEdit = (inquiryData) => {
-    navigate("/owner-dashboard/inquires/edit", { state: { inquiryData } });
+    navigate("/owner-dashboard/inquiries/edit", { state: { inquiryData } });
   };
 
   const startEditing = (inquiry) => {
-    if (["Approved", "Rejected"].includes(inquiry.status)) {
-      toast.info("You cannot edit inquiries that are already approved or rejected.");
+    if (["approved", "declined"].includes(inquiry.status?.toLowerCase())) {
+      toast.info("You cannot edit inquiries that are already approved or declined.");
       return;
     }
     setEditingInquiry(inquiry);
     setResponseText(inquiry.response || "");
-    setStatus(inquiry.status || "Pending");
+    setStatus(inquiry.status?.toLowerCase() || "pending");
   };
 
   const handleUpdate = async () => {
@@ -81,10 +80,10 @@ const OwnerInquiries = () => {
         authHeader
       );
       toast.success("Inquiry updated!");
-      FetchInquiries();
+      fetchInquiries();
       setEditingInquiry(null);
       setResponseText("");
-      setStatus("Pending");
+      setStatus("pending");
     } catch (error) {
       toast.error(error.response?.data?.message || "Update failed");
     } finally {
@@ -143,15 +142,15 @@ const OwnerInquiries = () => {
                     <td>{inquiry.message}</td>
                     <td>{inquiry.response || <span className="text-muted">No response</span>}</td>
                     <td>
-                      <span className={`badge bg-${inquiry.status === "Approved" ? "success" : inquiry.status === "Rejected" ? "danger" : "secondary"}`}>
-                        {inquiry.status}
+                      <span className={`badge bg-${inquiry.status === "approved" ? "success" : inquiry.status === "declined" ? "danger" : "secondary"}`}>
+                        {inquiry.status || "Pending"}
                       </span>
                     </td>
                     <td>
                       <button
                         className="btn btn-sm btn-outline-primary me-2"
                         onClick={() => startEditing(inquiry)}
-                        disabled={["Approved", "Rejected"].includes(inquiry.status)}
+                        disabled={["approved", "declined"].includes(inquiry.status?.toLowerCase())}
                       >
                         <i className="bi bi-check2-circle me-1"></i>Respond
                       </button>
@@ -199,9 +198,9 @@ const OwnerInquiries = () => {
                   onChange={(e) => setStatus(e.target.value)}
                   disabled={loading}
                 >
-                  <option value="Pending">Pending</option>
-                  <option value="Approved">Approved</option>
-                  <option value="Rejected">Rejected</option>
+                  <option value="pending">Pending</option>
+                  <option value="approved">Approved</option>
+                  <option value="declined">Declined</option>
                 </select>
               </div>
               <div className="d-flex justify-content-end">
