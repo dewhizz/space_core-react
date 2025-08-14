@@ -22,7 +22,7 @@ const AddBooking = () => {
     try {
       toast.info("Loading approved inquiries...");
       const res = await axios.get(
-        "https://space-core.onrender.com/api/inquiries/my-inquiries", // ✅ corrected endpoint
+        "https://space-core.onrender.com/api/inquiries/my-inquiries",
         authHeader
       );
       toast.dismiss();
@@ -56,7 +56,7 @@ const AddBooking = () => {
       const payload = { startDate, endDate };
 
       const res = await axios.post(
-        `https://space-core.onrender.com/api/bookings/${selectedInquiryId}`, // ✅ use inquiry ID
+        `https://space-core.onrender.com/api/bookings/${selectedInquiryId}`,
         payload,
         authHeader
       );
@@ -78,16 +78,28 @@ const AddBooking = () => {
       <nav aria-label="breadcrumb" className="mb-3">
         <ol className="breadcrumb">
           <li className="breadcrumb-item">
-            <Link className="text-decoration-none fw-semibold" to="/user-dashboard" style={{ color: "#00b894" }}>
+            <Link
+              className="text-decoration-none fw-semibold"
+              to="/user-dashboard"
+              style={{ color: "#00b894" }}
+            >
               <i className="bi bi-house-door-fill me-1"></i>Dashboard
             </Link>
           </li>
           <li className="breadcrumb-item">
-            <Link className="text-decoration-none fw-semibold" to="/user-dashboard/bookings" style={{ color: "#00b894" }}>
+            <Link
+              className="text-decoration-none fw-semibold"
+              to="/user-dashboard/bookings"
+              style={{ color: "#00b894" }}
+            >
               <i className="bi bi-calendar-check-fill me-1"></i>Bookings
             </Link>
           </li>
-          <li className="breadcrumb-item active fw-semibold" aria-current="page" style={{ color: "#00b894" }}>
+          <li
+            className="breadcrumb-item active fw-semibold"
+            aria-current="page"
+            style={{ color: "#00b894" }}
+          >
             <i className="bi bi-plus-circle-fill me-1"></i>Add Booking
           </li>
         </ol>
@@ -103,56 +115,37 @@ const AddBooking = () => {
         </Link>
       </div>
 
-      {/* Inquiry Cards */}
+      {/* Inquiry Dropdown Select */}
       <div className="mb-4">
         <h6 className="fw-semibold mb-3">Select an Approved Inquiry</h6>
-        <div className="row">
-          {inquiries.length === 0 ? (
-            <p className="text-muted">No approved inquiries available.</p>
-          ) : (
-            inquiries.map((inq) => (
-              <div
-                key={inq._id}
-                className={`col-md-4 mb-3`}
-                onClick={() => setSelectedInquiryId(inq._id)}
-              >
-                <div
-                  className={`card shadow-sm h-100 border ${
-                    selectedInquiryId === inq._id ? "border-success" : "border-light"
-                  }`}
-                  style={{ cursor: "pointer", transition: "0.3s" }}
-                >
-                  {inq.property?.photo && (
-                    <img
-                      src={inq.property.photo}
-                      alt={inq.property.title}
-                      className="card-img-top"
-                      style={{ height: "180px", objectFit: "cover" }}
-                    />
-                  )}
-                  <div className="card-body">
-                    <h6 className="card-title text-success">{inq.property?.title}</h6>
-                    <p className="card-text mb-1">
-                      <i className="bi bi-person-fill me-1"></i>
-                      {inq.property?.owner?.name}
-                    </p>
-                    <p className="card-text">
-                      <i className="bi bi-geo-alt-fill me-1"></i>
-                      Plot {inq.property?.plotNumber}
-                    </p>
-                    {selectedInquiryId === inq._id && (
-                      <span className="badge bg-success">Selected</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+
+        {inquiries.length === 0 ? (
+          <p className="text-muted">No approved inquiries available.</p>
+        ) : (
+          <select
+            className="form-select"
+            value={selectedInquiryId}
+            onChange={(e) => setSelectedInquiryId(e.target.value)}
+            required
+          >
+            <option value="">-- Choose an approved inquiry --</option>
+            {inquiries.map((inq) => (
+              <option key={inq._id} value={inq._id}>
+                {inq.property?.title} - Plot {inq.property?.plotNumber} (
+                {inq.property?.location})
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       {/* Booking Form */}
-      <div className="card p-4 shadow-sm mb-4 border-0" style={{ background: "linear-gradient(to right, #eafaf1, #ffffff)" }}>
+      <div
+        className="card p-4 shadow-sm mb-4 border-0"
+        style={{
+          background: "linear-gradient(to right, #eafaf1, #ffffff)",
+        }}
+      >
         <form onSubmit={handleSubmit}>
           <div className="row">
             <div className="col-md-6 mb-3">

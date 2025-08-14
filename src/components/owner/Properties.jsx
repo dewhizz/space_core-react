@@ -1,166 +1,184 @@
-import React, { useEffect, useState, useContext, useRef, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import "bootstrap-icons/font/bootstrap-icons.css";
-
-// Helper component to observe element visibility
-const Sentinel = React.forwardRef((_, ref) => <div ref={ref}></div>);
+import { useNavigate, Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import axios from "axios";
+import {
+  House,
+  PlusCircle,
+  Buildings,
+  PencilSimple,
+  Spinner,
+} from "phosphor-react";
+import "react-toastify/dist/ReactToastify.css";
 
 const OwnerProperties = () => {
-  const { token } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+
+  const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const propertiesRef = useRef(null);
 
   const authHeader = {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const fetchProperties = useCallback(async () => {
-    if (!hasMore) return;
-    setLoading(true);
+  const fetchProperties = async () => {
     try {
+      setLoading(true);
+      toast.info("Loading your properties...");
+
       const res = await axios.get(
-        `https://space-core.onrender.com/api/properties/owner-properties`,
+        "https://space-core.onrender.com/api/properties/owner-properties",
         authHeader
       );
-      const data = res.data;
-      if (data.length > 0) {
-        setProperties(prev => [...prev, ...data]);
-        if (data.length < 10) setHasMore(false);
-      } else {
-        setHasMore(false);
-      }
+      setProperties(res.data || []);
+      toast.dismiss();
     } catch (error) {
+      toast.dismiss();
       toast.error(error.response?.data?.message || "Failed to load properties");
     } finally {
       setLoading(false);
     }
-  }, [page, token, hasMore]);
+  };
 
   useEffect(() => {
     fetchProperties();
-  }, [fetchProperties]);
+  }, []);
 
-  const observer = useRef();
-  const sentinelRef = useCallback(node => {
-    if (loading) return;
-    if (observer.current) observer.current.disconnect();
-
-    observer.current = new IntersectionObserver(entries => {
-      if (entries[0].isIntersecting && hasMore) {
-        setPage(prev => prev + 1);
-      }
-    });
-
-    if (node) observer.current.observe(node);
-  }, [loading, hasMore]);
+  const handleEdit = (property) => {
+    navigate("/owner-dashboard/properties/edit", { state: { property } });
+  };
 
   return (
-    <div className="container mt-4">
+    <div
+      ref={propertiesRef}
+      className="container mt-4"
+      style={{ fontFamily: "Poppins, sans-serif", minHeight: "100vh" }}
+    >
       <ToastContainer position="top-right" autoClose={3000} />
-      {/* Breadcrumb and header */}
-      <nav aria-label="breadcrumb" className="mb-4">
-        <ol className="breadcrumb bg-light rounded p-2 shadow-sm">
-          <li className="breadcrumb-item fw-bold">
-            <Link
-              to="/owner-dashboard"
-              className="text-primary text-decoration-none"
-            >
-              <i className="bi bi-speedometer2 me-1"></i>Dashboard
-            </Link>
-          </li>
-          <li
-            className="breadcrumb-item active text-secondary"
-            aria-current="page"
-          >
-            <i className="bi bi-building me-1"></i>Properties
-          </li>
-        </ol>
-      </nav>
 
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2 className="text-success">
-          <i className="bi bi-building me-2"></i>Your Properties
-        </h2>
+      {/* Breadcrumbs and Header */}
+      <div className="d-flex justify-content-between align-items-center mb-3">
+        <nav aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item fw-bold">
+              <Link
+                to="/owner-dashboard"
+                className="text-primary text-decoration-none"
+              >
+                <House size={18} weight="duotone" className="me-1" />
+                Dashboard
+              </Link>
+            </li>
+            <li
+              className="breadcrumb-item active text-secondary"
+              aria-current="page"
+            >
+              <Buildings size={18} weight="duotone" className="me-1" />
+              Properties
+            </li>
+          </ol>
+        </nav>
         <button
           className="btn btn-primary"
           onClick={() => navigate("/owner-dashboard/properties/add")}
         >
-          <i className="bi bi-plus-circle me-2"></i>Add New Property
+          <PlusCircle size={20} weight="fill" className="me-2" />
+          Add Property
         </button>
       </div>
 
-      <div className="table-responsive">
-        <table className="table table-bordered align-middle table-hover shadow-sm">
-          <thead className="table-success">
-            <tr>
-              <th>Photo</th>
-              <th>Plot Number</th>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Location</th>
-              <th>Rent Amount</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {properties.map((prop) => (
-              <tr key={prop._id}>
-                <td>
-                  <img
-                    src={`https://space-core.onrender.com/${prop.photo}`}
-                    alt={prop.title}
-                    style={{
-                      width: "80px",
-                      height: "60px",
-                      objectFit: "cover",
-                      borderRadius: "6px",
-                      border: "1px solid #ccc",
-                    }}
-                  />
-                </td>
-                <td>{prop.plotNumber}</td>
-                <td>{prop.title}</td>
-                <td>{prop.propertyType || "N/A"}</td>
-                <td>{prop.location || "N/A"}</td>
-                <td>
-                  {prop.rentAmount != null ? `$${prop.rentAmount}` : "N/A"}
-                </td>
-                <td>{prop.status || "Pending"}</td>
-                <td>
-                  <Link
-                    to={`/owner-dashboard/properties/edit/${prop._id}`}
-                    className="btn btn-sm btn-secondary me-2"
-                  >
-                    <i className="bi bi-pencil-square"></i> Edit
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Card Container */}
+      <div className="card shadow-sm p-4 mb-4" style={{ borderRadius: "12px" }}>
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h5 className="text-primary fw-semibold">
+            <Buildings size={20} className="me-2" />
+            My Properties
+            <span className="badge bg-secondary ms-2">{properties.length}</span>
+          </h5>
+        </div>
 
-        {loading && (
-          <div className="text-center py-2">
-            <i className="bi bi-arrow-repeat spin me-2"></i>Loading more…
-          </div>
-        )}
-
-        {!hasMore && (
-          <div className="text-center py-2 text-secondary">
-            — No more properties —
-          </div>
-        )}
-
-        {/* Sentinel div triggers load more */}
-        <Sentinel ref={sentinelRef} />
+        <div className="table-responsive">
+          {loading ? (
+            <div className="text-center py-5">
+              <Spinner size={32} className="text-primary spin" />
+              <p className="mt-3">Fetching properties...</p>
+            </div>
+          ) : properties.length === 0 ? (
+            <div className="text-center py-5">
+              <img
+                src="https://cdn-icons-png.flaticon.com/512/4076/4076549.png"
+                alt="No properties"
+                style={{ width: "120px", opacity: 0.6 }}
+              />
+              <p className="mt-3 text-muted">No properties found!</p>
+            </div>
+          ) : (
+            <table className="table table-hover table-bordered align-middle">
+              <thead className="table-light">
+                <tr>
+                  <th>Photo</th>
+                  <th>Plot No.</th>
+                  <th>Title</th>
+                  <th>Type</th>
+                  <th>Location</th>
+                  <th>Rent</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {properties.map((prop) => (
+                  <tr key={prop._id}>
+                    <td>
+                      <img
+                        src={`https://space-core.onrender.com/${prop.photo}`}
+                        alt={prop.title}
+                        style={{
+                          width: "80px",
+                          height: "60px",
+                          objectFit: "cover",
+                          borderRadius: "6px",
+                          border: "1px solid #ccc",
+                        }}
+                      />
+                    </td>
+                    <td>{prop.plotNumber || "N/A"}</td>
+                    <td>{prop.title}</td>
+                    <td>{prop.propertyType || "N/A"}</td>
+                    <td>{prop.location || "N/A"}</td>
+                    <td>
+                      {prop.rentAmount != null ? `$${prop.rentAmount}` : "N/A"}
+                    </td>
+                    <td>
+                      <span
+                        className={`badge ${
+                          prop.status === "available"
+                            ? "bg-success"
+                            : prop.status === "rented"
+                            ? "bg-secondary"
+                            : "bg-warning"
+                        }`}
+                      >
+                        {prop.status || "Pending"}
+                      </span>
+                    </td>
+                    <td>
+                      <button
+                        className="btn btn-sm btn-outline-primary"
+                        onClick={() => handleEdit(prop)}
+                      >
+                        <PencilSimple size={16} weight="bold" />Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
       </div>
     </div>
   );

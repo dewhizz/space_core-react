@@ -27,7 +27,7 @@ const PropertyEdit = () => {
     if (!selectedProperty) {
       toast.error("No Property data provided");
       setTimeout(() => {
-        navigate("/admin-dashboard/properties");
+        navigate("/owner-dashboard/properties");
       }, 2000);
       return;
     }
@@ -58,7 +58,7 @@ const PropertyEdit = () => {
       );
 
       toast.success(res.data.message || "Property Updated Successfully");
-      navigate("/admin-dashboard/properties");
+      navigate("/owner-dashboard/properties");
     } catch (error) {
       toast.error(error.response?.data?.message || "Error updating property");
     } finally {
@@ -73,12 +73,12 @@ const PropertyEdit = () => {
       <nav aria-label="breadcrumb" className="mb-3">
         <ol className="breadcrumb">
           <li className="breadcrumb-item fw-bold">
-            <Link to="/admin-dashboard">Dashboard</Link>
+            <Link to="/owner-dashboard">Dashboard</Link>
           </li>
           <li className="breadcrumb-item fw-bold">
-            <Link to="/admin-dashboard/properties">Properties</Link>
+            <Link to="page">Properties</Link>
           </li>
-          <li className="breadcrumb-item active" aria-current="page">
+          <li className="breadcrumb-item active" aria-current="#">
             Update Property
           </li>
         </ol>
@@ -89,7 +89,7 @@ const PropertyEdit = () => {
           <h5 className="text-success">
             <i className="bi bi-building me-2"></i>Update Property
           </h5>
-          <Link className="btn btn-success" to={"/admin-dashboard/properties"}>
+          <Link className="btn btn-success" to={"/owner-dashboard/properties"}>
             <i className="bi bi-arrow-left-circle-fill me-2"></i>Back
           </Link>
         </div>

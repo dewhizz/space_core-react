@@ -30,7 +30,7 @@ const SideBar = () => {
 
             <li className="nav-item">
           <NavLink
-            to="/owner-dashboard/owner-properties"
+            to="/owner-dashboard/properties"
             end
             className={({ isActive }) =>
               isActive

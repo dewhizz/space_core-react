@@ -17,7 +17,7 @@ const OwnerBookings = () => {
     try {
       toast.info("Loading bookings...");
       const res = await axios.get(
-        "https://space-core.onrender.com/api/booking/my-bookings",
+        "https://space-core.onrender.com/api/booking/owner-bookings",
         authHeader
       );
       setBookings(res.data);
