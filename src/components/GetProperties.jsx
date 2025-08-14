@@ -120,10 +120,7 @@ const GetProperties = () => {
                 }}
               >
                 <img
-                  src={
-                    prop.photo ||
-                    "https://via.placeholder.com/400x200?text=No+Image"
-                  }
+                  src={`https://space-core.onrender.com/${prop.photo}`}
                   alt={prop.title}
                   className="card-img-top"
                   style={{

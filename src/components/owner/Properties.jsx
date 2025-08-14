@@ -26,7 +26,7 @@ const OwnerProperties = () => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `https://space-core.onrender.com/api/properties/owner-properties?page=${page}&limit=10`,
+        `https://space-core.onrender.com/api/properties/owner-properties`,
         authHeader
       );
       const data = res.data;
@@ -68,11 +68,17 @@ const OwnerProperties = () => {
       <nav aria-label="breadcrumb" className="mb-4">
         <ol className="breadcrumb bg-light rounded p-2 shadow-sm">
           <li className="breadcrumb-item fw-bold">
-            <Link to="/owner-dashboard" className="text-primary text-decoration-none">
+            <Link
+              to="/owner-dashboard"
+              className="text-primary text-decoration-none"
+            >
               <i className="bi bi-speedometer2 me-1"></i>Dashboard
             </Link>
           </li>
-          <li className="breadcrumb-item active text-secondary" aria-current="page">
+          <li
+            className="breadcrumb-item active text-secondary"
+            aria-current="page"
+          >
             <i className="bi bi-building me-1"></i>Properties
           </li>
         </ol>
@@ -105,15 +111,18 @@ const OwnerProperties = () => {
             </tr>
           </thead>
           <tbody>
-            {properties.map(prop => (
+            {properties.map((prop) => (
               <tr key={prop._id}>
                 <td>
                   <img
-                    src={prop.photo || "https://via.placeholder.com/80x60?text=No+Image"}
+                    src={`https://space-core.onrender.com/${prop.photo}`}
                     alt={prop.title}
                     style={{
-                      width: "80px", height: "60px",
-                      objectFit: "cover", borderRadius: "6px", border: "1px solid #ccc"
+                      width: "80px",
+                      height: "60px",
+                      objectFit: "cover",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
                     }}
                   />
                 </td>
@@ -121,7 +130,9 @@ const OwnerProperties = () => {
                 <td>{prop.title}</td>
                 <td>{prop.propertyType || "N/A"}</td>
                 <td>{prop.location || "N/A"}</td>
-                <td>{prop.rentAmount != null ? `$${prop.rentAmount}` : "N/A"}</td>
+                <td>
+                  {prop.rentAmount != null ? `$${prop.rentAmount}` : "N/A"}
+                </td>
                 <td>{prop.status || "Pending"}</td>
                 <td>
                   <Link
