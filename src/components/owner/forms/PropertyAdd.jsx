@@ -19,17 +19,26 @@ const PropertyAdd = () => {
   const [depositAmount, setDepositAmount] = useState("");
   const [isAvailable, setIsAvailable] = useState(true);
   const [status, setStatus] = useState("active");
-  const [photo, setPhoto] = useState(null);
-
+  const [photos, setPhotos] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const authHeader = {
     headers: { Authorization: `Bearer ${token}` },
   };
 
+  const handlePhotoChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (files.length > 5) {
+      toast.error("You can upload a maximum of 5 photos.");
+      return;
+    }
+
+    setPhotos(files);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setLoading(true);
     toast.info("Submitting Property...");
 
@@ -44,7 +53,9 @@ const PropertyAdd = () => {
     formData.append("isAvailable", isAvailable);
     formData.append("status", status);
 
-    if (photo) formData.append("photo", photo);
+    photos.forEach((file) => {
+      formData.append("photos", file); // `photos` must match the field name in the backend
+    });
 
     try {
       const res = await axios.post(
@@ -52,10 +63,11 @@ const PropertyAdd = () => {
         formData,
         authHeader
       );
+
       toast.dismiss();
       toast.success(res.data.message || "Property added successfully");
 
-      // Reset form after successful submit
+      // Reset form
       setPlotNumber("");
       setTitle("");
       setDescription("");
@@ -65,9 +77,8 @@ const PropertyAdd = () => {
       setDepositAmount("");
       setIsAvailable(true);
       setStatus("active");
-      setPhoto(null);
+      setPhotos([]);
 
-      // Navigate to properties list or wherever
       navigate("/owner-dashboard/properties");
     } catch (error) {
       toast.dismiss();
@@ -182,10 +193,22 @@ const PropertyAdd = () => {
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => setPhoto(e.target.files[0])}
+          multiple
+          onChange={handlePhotoChange}
           className="form-control mb-3"
           disabled={loading}
         />
+
+        {photos.length > 0 && (
+          <div className="mb-3">
+            <strong>Selected Photos:</strong>
+            <ul className="mt-2">
+              {photos.map((photo, idx) => (
+                <li key={idx}>{photo.name}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <button type="submit" className="btn btn-primary" disabled={loading}>
           {loading ? "Submitting..." : "Add Property"}

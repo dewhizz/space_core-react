@@ -39,7 +39,7 @@ const LoginComponent = () => {
       setLoading('');
 
       if (user?.role === 'user') {
-        navigate('/user-dashboard');
+        navigate('/get-properties');
       } else if (user?.role === 'owner') {
         navigate('/owner-dashboard');
       } else {

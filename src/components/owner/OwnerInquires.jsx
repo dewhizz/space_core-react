@@ -23,7 +23,7 @@ const OwnerInquiries = () => {
     try {
       toast.info("Loading inquiries...");
       const res = await axios.get(
-        "https://space-core.onrender.com/api/inquiries/owner-inquires",
+        "https://space-core.onrender.com/api/inquiries/owner-inquiries",
         authHeader
       );
       setInquiries(res.data);

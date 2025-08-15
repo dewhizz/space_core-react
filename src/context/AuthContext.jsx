@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { io } from "socket.io-client";
+
 
 // Create context
 export const AuthContext = createContext();
@@ -58,32 +58,7 @@ export const AuthProvider = ({ children }) => {
     }
   }, [token, logout]);
 
-  // Connect socket when user is available
-  useEffect(() => {
-    if (user?.userId && !socketRef.current) {
-      socketRef.current = io("https://space-core.onrender.com", {
-        query: { userId: user.userId },
-        transports: ["websocket"],
-      });
 
-      socketRef.current.emit("joinRoom", user.userId);
-
-      socketRef.current.on("connect", () => {
-        console.log("Socket connected:", socketRef.current.id);
-      });
-
-      socketRef.current.on("disconnect", () => {
-        console.log("Socket disconnected");
-      });
-    }
-
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
-    };
-  }, [user]);
 
   return (
     <AuthContext.Provider
@@ -93,7 +68,7 @@ export const AuthProvider = ({ children }) => {
         user,
         setUser,
         logout,
-        socket: socketRef.current,
+  
       }}
     >
       {children}

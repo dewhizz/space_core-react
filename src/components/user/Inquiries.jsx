@@ -23,8 +23,8 @@ const Inquiries = () => {
       toast.info("Loading your inquiries...");
 
       const endpoint = statusFilter
-        ? `https://space-core.onrender.com/api/inquiries/my-inquires/filter?status=${statusFilter}`
-        : `https://space-core.onrender.com/api/inquiries/my-inquires`;
+        ? `https://space-core.onrender.com/api/inquiries/my-inquiriesfilter?status=${statusFilter}`
+        : `https://space-core.onrender.com/api/inquiries/my-inquiries`;
 
       const res = await axios.get(endpoint, authHeader);
       setInquiries(res.data.inquiries || res.data);
@@ -73,10 +73,10 @@ const Inquiries = () => {
             <li className="breadcrumb-item fw-bold">
               <Link to="/user-dashboard" className="text-success">Dashboard</Link>
             </li>
-            <li className="breadcrumb-item active" aria-current="page">Inquiries</li>
+            <li className="breadcrumb-item active" aria-current="/inquires">Inquiries</li>
           </ol>
         </nav>
-        <button className="btn btn-success" onClick={() => navigate("/user-dashboard/inquiries/add")}>
+        <button className="btn btn-success" onClick={() => navigate("/user-dashboard/inquires/add")}>
           <i className="bi bi-plus-circle-fill me-2"></i> Add Inquiry
         </button>
       </div>

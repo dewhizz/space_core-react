@@ -1,32 +1,31 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AuthContext } from "../context/AuthContext"; // Ensure inside src/context/AuthContext.js
-import "bootstrap-icons/font/bootstrap-icons.css"; // Make sure Bootstrap Icons are installed
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const GetProperties = () => {
+  const { token, user } = useContext(AuthContext);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(false);
-  const { token, user } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const apiUrl =
-    user?.role === "owner"
-      ? "https://space-core.onrender.com/api/properties/owner-properties"
-      : "https://space-core.onrender.com/api/properties";
+  const authHeader = token
+    ? {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    : {};
 
-  const fetchProperties = useCallback(async () => {
+  const FetchProperties = async () => {
     setLoading(true);
     try {
-      toast.info("Loading properties...", { theme: "colored" });
-
-      const authHeader = {
-        headers: { Authorization: `Bearer ${token}` },
-      };
-
-      const res = await axios.get(apiUrl, authHeader);
+      toast.info("Loading properties ....", { theme: "colored" });
+      const res = await axios.get(
+        "https://space-core.onrender.com/api/properties/",
+        authHeader
+      );
       setProperties(res.data);
       toast.dismiss();
     } catch (error) {
@@ -38,137 +37,130 @@ const GetProperties = () => {
     } finally {
       setLoading(false);
     }
-  }, [apiUrl, token]);
+  };
 
   useEffect(() => {
-    fetchProperties();
-  }, [fetchProperties]);
+    FetchProperties();
+  }, []);
 
   const handleAddInquiry = (propertyId) => {
-    navigate("/inquiries/add", { state: { propertyId } });
+    navigate("/user-dashboard/inquires/add", { state: { propertyId } });
   };
 
   return (
-    <div className="container mt-4">
+    <div
+      className="container-fluid py-4"
+      style={{
+        minHeight: "100vh",
+        fontFamily: "Inter, sans-serif",
+        background: "linear-gradient(to right, #e3f2fd, #fce4ec)",
+      }}
+    >
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <nav aria-label="breadcrumb" className="mb-4">
-        <ol className="breadcrumb bg-light rounded p-2 shadow-sm">
-          <li className="breadcrumb-item fw-bold">
-            <Link
-              to={
-                user?.role === "owner" ? "/owner-dashboard" : "/user-dashboard"
-              }
-              className="text-primary text-decoration-none"
-            >
-              <i className="bi bi-speedometer2 me-1"></i>Dashboard
-            </Link>
-          </li>
-          <li
-            className="breadcrumb-item active text-secondary"
-            aria-current="page"
-          >
-            <i className="bi bi-house-door-fill me-1"></i>Properties
-          </li>
-        </ol>
-      </nav>
-
-      {user?.role === "owner" && (
-        <div className="d-flex justify-content-end mb-4">
-          <button
-            className="btn btn-gradient-primary shadow-sm"
-            onClick={() => navigate("/owner-dashboard/properties/add")}
-            disabled={loading}
-            style={{
-              background: "linear-gradient(90deg, #4b6cb7 0%, #182848 100%)",
-              color: "white",
-              fontWeight: "600",
-              border: "none",
-              boxShadow: "0 4px 15px rgba(75,108,183,0.4)",
-              transition: "transform 0.15s ease-in-out",
-            }}
-            onMouseEnter={(e) =>
-              (e.currentTarget.style.transform = "scale(1.05)")
-            }
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            <i className="bi bi-plus-circle-fill me-2"></i> Add New Property
-          </button>
-        </div>
-      )}
-
-      {loading ? (
-        <div className="alert alert-info text-center">
-          <i className="bi bi-arrow-repeat spin me-2"></i> Loading properties...
-        </div>
-      ) : properties.length === 0 ? (
-        <div className="alert alert-warning text-center">
-          <i className="bi bi-exclamation-triangle-fill me-2"></i>No properties
-          found.
-        </div>
-      ) : (
-        <div className="row">
-          {properties.map((prop) => (
-            <div key={prop._id} className="col-md-4 mb-4">
-              <div
-                className="card shadow-sm h-100 border-0"
-                style={{
-                  borderRadius: "12px",
-                  overflow: "hidden",
-                  boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
-                  border: "2px solid gold", // gold border outline
-                }}
+      {/* Breadcrumb with Dashboard link and page title */}
+      <div className="container mb-4">
+        <nav
+          aria-label="breadcrumb"
+          className="d-flex justify-content-between align-items-center bg-white rounded shadow-sm px-3 py-2"
+        >
+          <ol className="breadcrumb mb-0 d-flex align-items-center">
+            <li className="breadcrumb-item">
+              <Link
+                to={
+                  user?.role === "owner"
+                    ? "/owner-dashboard"
+                    : "/user-dashboard"
+                }
+                className="text-decoration-none fw-semibold d-flex align-items-center"
+                style={{ color: "#2c3e50" }}
               >
-                <img
-                  src={`https://space-core.onrender.com/${prop.photo}`}
-                  alt={prop.title}
-                  className="card-img-top"
-                  style={{
-                    height: "200px",
-                    objectFit: "cover",
-                    filter: "brightness(0.9)",
-                  }}
-                />
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title text-primary fw-bold">
-                    {prop.title}
-                  </h5>
-                  <p
-                    className="card-text text-muted"
-                    style={{
-                      flexGrow: 1,
-                      fontSize: "0.95rem",
-                      lineHeight: "1.3",
-                    }}
-                    title={prop.description}
-                  >
-                    {prop.description
-                      ? prop.description.length > 100
-                        ? prop.description.slice(0, 100) + "..."
-                        : prop.description
-                      : "No description available"}
-                  </p>
-                  <div className="mb-3 d-flex justify-content-between align-items-center">
-                    <small className="text-secondary d-flex align-items-center">
-                      <i className="bi bi-eye-fill me-1"></i> {prop.views || 0}{" "}
-                      views
-                    </small>
+                <i className="bi bi-person-check me-2"></i>{" "}
+                {/* profile*/}
+                Profile
+              </Link>
+            </li>
+          </ol>
+        </nav>
 
-                    <div>
-                      {user?.role === "owner" && (
-                        <Link
-                          to={`/owner-dashboard/properties/edit/${prop._id}`}
-                          className="btn btn-sm btn-outline-primary me-2"
-                          style={{ fontWeight: "600" }}
-                        >
-                          <i className="bi bi-pencil-fill"></i> Edit
-                        </Link>
-                      )}
+        <h4 className="mb-0 text-primary fw-bold text-center mt-3">
+          Available Properties
+        </h4>
+      </div>
+
+      {/* Property Cards */}
+      <div className="container">
+        {loading ? (
+          <div className="alert alert-info text-center">
+            <i className="bi bi-arrow-repeat me-2 spin"></i> Loading
+            properties...
+          </div>
+        ) : properties.length === 0 ? (
+          <div className="alert alert-warning text-center">
+            <i className="bi bi-exclamation-triangle-fill me-2"></i>No
+            properties found.
+          </div>
+        ) : (
+          <div className="row">
+            {properties.map((prop) => (
+              <div className="col-md-6 mb-4" key={prop._id}>
+                <div
+                  className="card h-100 shadow"
+                  style={{
+                    borderRadius: "15px",
+                    overflow: "hidden",
+                    backgroundColor: "#fefefe",
+                    border: "3px solid gold",
+                    transition: "transform 0.25s ease-in-out",
+                    boxShadow: "0 6px 12px rgba(0,0,0,0.1)",
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.transform = "scale(1.02)")
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.transform = "scale(1)")
+                  }
+                >
+                  <img
+                    src={`https://space-core.onrender.com/${prop.photo}`}
+                    alt={prop.title}
+                    className="card-img-top"
+                    style={{
+                      height: "350px",
+                      objectFit: "cover",
+                      width: "100%",
+                      borderBottom: "2px solid gold",
+                    }}
+                  />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title fw-bold text-dark mb-2">
+                      {prop.title}
+                    </h5>
+                    <p
+                      className="card-text text-muted mb-3"
+                      style={{ flexGrow: 1 }}
+                    >
+                      {prop.description
+                        ? prop.description.length > 120
+                          ? prop.description.slice(0, 120) + "..."
+                          : prop.description
+                        : "No description available"}
+                    </p>
+
+                    <div className="d-flex justify-content-between align-items-center">
+                      <small className="text-secondary">
+                        <i className="bi bi-eye-fill me-1"></i>
+                        {prop.views || 0} views
+                      </small>
 
                       <button
                         onClick={() => handleAddInquiry(prop._id)}
-                        className="btn btn-sm btn-success"
-                        style={{ fontWeight: "600" }}
+                        className="btn btn-sm"
+                        style={{
+                          backgroundColor: "#00796b",
+                          color: "#fff",
+                          fontWeight: "600",
+                        }}
                       >
                         <i className="bi bi-chat-left-text-fill me-1"></i> Add
                         Inquiry
@@ -177,10 +169,29 @@ const GetProperties = () => {
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Floating Scroll-to-Top Button */}
+      <button
+        className="btn rounded-circle shadow-lg"
+        style={{
+          backgroundColor: "gold",
+          color: "#2c3e50",
+          position: "fixed",
+          bottom: "20px",
+          right: "20px",
+          width: "56px",
+          height: "56px",
+          zIndex: "1000",
+          fontWeight: "bold",
+        }}
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      >
+        <i className="bi bi-arrow-up fs-4"></i>
+      </button>
     </div>
   );
 };
