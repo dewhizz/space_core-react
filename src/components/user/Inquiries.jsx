@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Inquiries = () => {
   const [inquiries, setInquiries] = useState([]);
-  const [statusFilter, setStatusFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const [loading, setLoading] = useState(false);
 
   const { token } = useContext(AuthContext);
@@ -22,9 +22,10 @@ const Inquiries = () => {
       setLoading(true);
       toast.info("Loading your inquiries...");
 
-      const endpoint = statusFilter
-        ? `https://space-core.onrender.com/api/inquiries/my-inquiriesfilter?status=${statusFilter}`
-        : `https://space-core.onrender.com/api/inquiries/my-inquiries`;
+      const endpoint =
+        statusFilter === "All"
+          ? `https://space-core.onrender.com/api/inquiries/my-inquiries`
+          : `https://space-core.onrender.com/api/inquiries/my-inquiriesfilter?status=${statusFilter}`;
 
       const res = await axios.get(endpoint, authHeader);
       setInquiries(res.data.inquiries || res.data);
@@ -59,7 +60,7 @@ const Inquiries = () => {
   };
 
   const handleEdit = (inquiryData) => {
-    navigate("/user-dashboard/inquiries/edit", { state: { inquiryData } });
+    navigate("/user-dashboard/inquires/edit", { state: { inquiryData } });
   };
 
   return (
@@ -73,7 +74,7 @@ const Inquiries = () => {
             <li className="breadcrumb-item fw-bold">
               <Link to="/user-dashboard" className="text-success">Dashboard</Link>
             </li>
-            <li className="breadcrumb-item active" aria-current="/inquires">Inquiries</li>
+            <li className="breadcrumb-item active" aria-current="page">Inquiries</li>
           </ol>
         </nav>
         <button className="btn btn-success" onClick={() => navigate("/user-dashboard/inquires/add")}>
@@ -92,11 +93,11 @@ const Inquiries = () => {
 
         {/* Status Filter Tabs */}
         <div className="mb-3 d-flex gap-2 flex-wrap">
-          {["All", "pending", "approved", "declined"].map((status) => (
+          {["All"].map((status) => (
             <button
               key={status}
-              className={`btn btn-sm ${status.toLowerCase() === statusFilter?.toLowerCase() ? "btn-success" : "btn-outline-success"}`}
-              onClick={() => setStatusFilter(status === "All" ? "" : status)}
+              className={`btn btn-sm ${status === statusFilter ? "btn-success" : "btn-outline-success"}`}
+              onClick={() => setStatusFilter(status)}
             >
               {status}
             </button>
@@ -124,7 +125,8 @@ const Inquiries = () => {
               <thead className="table-light">
                 <tr>
                   <th>#</th>
-                  <th>Property</th>
+                  <th>Photo</th>
+                  <th>Details</th>
                   <th>Message</th>
                   <th>Response</th>
                   <th>Status</th>
@@ -135,15 +137,24 @@ const Inquiries = () => {
                 {inquiries.map((inq, index) => (
                   <tr key={inq._id}>
                     <td>{index + 1}</td>
+                    <td>
+                      {inq.property?.photo ? (
+                        <img
+                          src={`https://space-core.onrender.com/${inq.property.photo}`}
+                          alt="Property"
+                          width={60}
+                          height={60}
+                          style={{ objectFit: 'cover', borderRadius: '50%' }}
+                        />
+                      ) : (
+                        'No Photo'
+                      )}
+                    </td>
                     <td>{inq.property?.title || "N/A"}</td>
-                    <td>{inq.message}</td>
+                    <td>{inq.message || "No message provided"}</td>
                     <td>{inq.response || "N/A"}</td>
                     <td>
-                      <span className={`badge ${
-                        inq.status === "approved" ? "bg-success" :
-                        inq.status === "declined" ? "bg-danger" :
-                        "bg-warning"
-                      }`}>
+                      <span className={`badge ${inq.status === "approved" ? "bg-success" : "bg-warning text-dark"}`}>
                         {inq.status || "Pending"}
                       </span>
                     </td>

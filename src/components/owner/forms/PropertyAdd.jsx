@@ -9,7 +9,6 @@ const PropertyAdd = () => {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  // Form state variables
   const [plotNumber, setPlotNumber] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -27,14 +26,9 @@ const PropertyAdd = () => {
   };
 
   const handlePhotoChange = (e) => {
-    const files = Array.from(e.target.files);
-
-    if (files.length > 5) {
-      toast.error("You can upload a maximum of 5 photos.");
-      return;
-    }
-
-    setPhotos(files);
+    const file = e.target.files[0];
+    if (!file) return;
+    setPhotos([file]);
   };
 
   const handleSubmit = async (e) => {
@@ -52,10 +46,9 @@ const PropertyAdd = () => {
     formData.append("depositAmount", depositAmount);
     formData.append("isAvailable", isAvailable);
     formData.append("status", status);
-
-    photos.forEach((file) => {
-      formData.append("photos", file); // `photos` must match the field name in the backend
-    });
+    if (photos.length > 0) {
+      formData.append("photo", photos[0]);
+    }
 
     try {
       const res = await axios.post(
@@ -63,11 +56,9 @@ const PropertyAdd = () => {
         formData,
         authHeader
       );
-
       toast.dismiss();
       toast.success(res.data.message || "Property added successfully");
 
-      // Reset form
       setPlotNumber("");
       setTitle("");
       setDescription("");
@@ -82,138 +73,197 @@ const PropertyAdd = () => {
       navigate("/owner-dashboard/properties");
     } catch (error) {
       toast.dismiss();
-      toast.error(error.response?.data?.message || "Failed to add property");
-    } finally {
-      setLoading(false);
+      toast.error(error.response?.data?.message );
     }
   };
 
   return (
-    <div className="container mt-3" style={{ maxWidth: 600 }}>
+    <div
+      className="container-fluid py-5"
+      style={{
+        fontFamily: "Poppins, sans-serif",
+        background: "linear-gradient(to right, #f0f4ff, #fff0f5)",
+        minHeight: "100vh",
+      }}
+    >
       <ToastContainer position="top-right" autoClose={3000} />
 
-      <h2 className="mb-4 text-success">
-        <i className="bi bi-building me-2"></i>Add New Property
-      </h2>
+      <div
+        className="mx-auto p-4 shadow-lg rounded"
+        style={{
+          maxWidth: "700px",
+          maxHeight: "90vh", 
+          overflowY: "auto", 
+          backgroundColor: "#ffffff",
+          borderRadius: "16px",
+          boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
+        }}
+      >
+        <h3 className="text-center text-primary fw-bold mb-4">
+          <i className="bi bi-building me-2"></i> Add New Property
+        </h3>
 
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <input
-          type="text"
-          placeholder="Plot Number"
-          value={plotNumber}
-          onChange={(e) => setPlotNumber(e.target.value)}
-          className="form-control mb-3"
-          required
-          disabled={loading}
-        />
-
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="form-control mb-3"
-          disabled={loading}
-        />
-
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="form-control mb-3"
-          rows={4}
-          disabled={loading}
-        />
-
-        <select
-          className="form-select mb-3"
-          value={propertyType}
-          onChange={(e) => setPropertyType(e.target.value)}
-          disabled={loading}
-        >
-          <option value="apartment">Apartment</option>
-          <option value="bungalow">Bungalow</option>
-          <option value="mansion">Mansion</option>
-          <option value="office">Office</option>
-          <option value="shop">Shop</option>
-        </select>
-
-        <input
-          type="text"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          className="form-control mb-3"
-          disabled={loading}
-        />
-
-        <input
-          type="text"
-          placeholder="Rent Amount"
-          value={rentAmount}
-          onChange={(e) => setRentAmount(e.target.value)}
-          className="form-control mb-3"
-          disabled={loading}
-        />
-
-        <input
-          type="text"
-          placeholder="Deposit Amount"
-          value={depositAmount}
-          onChange={(e) => setDepositAmount(e.target.value)}
-          className="form-control mb-3"
-          disabled={loading}
-        />
-
-        <div className="form-check mb-3">
-          <input
-            type="checkbox"
-            checked={isAvailable}
-            onChange={(e) => setIsAvailable(e.target.checked)}
-            className="form-check-input"
-            id="availableCheck"
-            disabled={loading}
-          />
-          <label className="form-check-label" htmlFor="availableCheck">
-            Available
-          </label>
-        </div>
-
-        <select
-          className="form-select mb-3"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          disabled={loading}
-        >
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="rented">Rented</option>
-        </select>
-
-        <input
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handlePhotoChange}
-          className="form-control mb-3"
-          disabled={loading}
-        />
-
-        {photos.length > 0 && (
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
+          {/* Basic Info */}
           <div className="mb-3">
-            <strong>Selected Photos:</strong>
-            <ul className="mt-2">
-              {photos.map((photo, idx) => (
-                <li key={idx}>{photo.name}</li>
-              ))}
-            </ul>
+            <label className="form-label fw-semibold">
+              <i className="bi bi-hash me-2 text-secondary"></i>Plot Number
+            </label>
+            <input
+              type="text"
+              value={plotNumber}
+              onChange={(e) => setPlotNumber(e.target.value)}
+              className="form-control"
+              required
+              disabled={loading}
+            />
           </div>
-        )}
 
-        <button type="submit" className="btn btn-primary" disabled={loading}>
-          {loading ? "Submitting..." : "Add Property"}
-        </button>
-      </form>
+          <div className="mb-3">
+            <label className="form-label fw-semibold">
+              <i className="bi bi-card-heading me-2 text-secondary"></i>Title
+            </label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="form-control"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-semibold">
+              <i className="bi bi-pencil-square me-2 text-secondary"></i>Description
+            </label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="form-control"
+              rows={4}
+              disabled={loading}
+            />
+          </div>
+
+          {/* Property Details */}
+          <div className="mb-3">
+            <label className="form-label fw-semibold">
+              <i className="bi bi-house-door me-2 text-secondary"></i>Property Type
+            </label>
+            <select
+              className="form-select"
+              value={propertyType}
+              onChange={(e) => setPropertyType(e.target.value)}
+              disabled={loading}
+            >
+              <option value="apartment">Apartment</option>
+              <option value="bungalow">Bungalow</option>
+              <option value="mansion">Mansion</option>
+              <option value="office">Office</option>
+              <option value="shop">Shop</option>
+            </select>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-semibold">
+              <i className="bi bi-geo-alt me-2 text-secondary"></i>Location
+            </label>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="form-control"
+              disabled={loading}
+            />
+          </div>
+
+          {/* Financials */}
+          <div className="row">
+            <div className="col-md-6 mb-3">
+              <label className="form-label fw-semibold">
+                <i className="bi bi-cash-coin me-2 text-secondary"></i>Rent Amount
+              </label>
+              <input
+                type="text"
+                value={rentAmount}
+                onChange={(e) => setRentAmount(e.target.value)}
+                className="form-control"
+                disabled={loading}
+              />
+            </div>
+            <div className="col-md-6 mb-3">
+              <label className="form-label fw-semibold">
+                <i className="bi bi-wallet2 me-2 text-secondary"></i>Deposit Amount
+              </label>
+              <input
+                type="text"
+                value={depositAmount}
+                onChange={(e) => setDepositAmount(e.target.value)}
+                className="form-control"
+                disabled={loading}
+              />
+            </div>
+          </div>
+
+          {/* Status */}
+          <div className="form-check form-switch mb-3">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              checked={isAvailable}
+              onChange={(e) => setIsAvailable(e.target.checked)}
+              id="availableSwitch"
+              disabled={loading}
+            />
+            <label className="form-check-label fw-semibold" htmlFor="availableSwitch">
+              <i className="bi bi-check-circle me-2 text-secondary"></i>Available
+            </label>
+          </div>
+
+          <div className="mb-3">
+            <label className="form-label fw-semibold">
+              <i className="bi bi-activity me-2 text-secondary"></i>Status
+            </label>
+            <select
+              className="form-select"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              disabled={loading}
+            >
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="rented">Rented</option>
+            </select>
+          </div>
+
+          {/* Photo Upload */}
+          <div className="mb-3">
+            <label className="form-label fw-semibold">
+              <i className="bi bi-image me-2 text-secondary"></i>Upload Photo
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handlePhotoChange}
+              className="form-control"
+              disabled={loading}
+            />
+          </div>
+
+          {photos.length > 0 && (
+            <div className="mb-3">
+              <strong>Selected Photo:</strong>
+              <p className="mt-2 text-muted">
+                <i className="bi bi-image-fill me-2 text-info"></i>{photos[0].name}
+              </p>
+            </div>
+          )}
+
+          <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+            {loading ? "Submitting..." : "Add Property"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

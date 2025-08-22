@@ -53,11 +53,11 @@ const AddBooking = () => {
 
     try {
       toast.info("Creating booking...");
-      const payload = { startDate, endDate };
+      const data = { startDate, endDate };
 
       const res = await axios.post(
         `https://space-core.onrender.com/api/bookings/${selectedInquiryId}`,
-        payload,
+        data,
         authHeader
       );
 
@@ -122,20 +122,31 @@ const AddBooking = () => {
         {inquiries.length === 0 ? (
           <p className="text-muted">No approved inquiries available.</p>
         ) : (
-          <select
-            className="form-select"
-            value={selectedInquiryId}
-            onChange={(e) => setSelectedInquiryId(e.target.value)}
-            required
-          >
-            <option value="">-- Choose an approved inquiry --</option>
-            {inquiries.map((inq) => (
-              <option key={inq._id} value={inq._id}>
-                {inq.property?.title} - Plot {inq.property?.plotNumber} (
-                {inq.property?.location})
-              </option>
-            ))}
-          </select>
+          <>
+            <select
+              className="form-select"
+              value={selectedInquiryId}
+              onChange={(e) => setSelectedInquiryId(e.target.value)}
+              required
+            >
+              <option value="">-- Choose an approved inquiry --</option>
+              {inquiries.map((inq) => (
+                <option key={inq._id} value={inq._id}>
+                  {inq.property?.title}
+                  {/* Image Preview */}
+                  {selectedInquiryId && (
+                    <div className="mt-3">
+                      <img
+                        src={`https://space-core.onrender.com/${inq.property.photo}`}
+                        alt="Property Preview"
+                        style={{ width: "200px", borderRadius: "8px" }}
+                      />
+                    </div>
+                  )}
+                </option>
+              ))}
+            </select>
+          </>
         )}
       </div>
 

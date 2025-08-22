@@ -92,7 +92,7 @@ const OwnerInquiries = () => {
   };
 
   return (
-    <div className="container mt-3">
+    <div className="container mt-3" style={{ fontFamily: "Poppins, sans-serif" }}>
       <ToastContainer position="top-right" autoClose={3000} />
 
       <nav aria-label="breadcrumb" className="mb-3">
@@ -120,8 +120,17 @@ const OwnerInquiries = () => {
             <i className="bi bi-exclamation-circle me-2"></i>No inquiries found.
           </div>
         ) : (
-          <div className="table-responsive">
-            <table className="table table-bordered table-hover align-middle">
+          <div
+            className="table-responsive"
+            style={{
+              maxHeight: "500px",
+              overflowY: "auto",
+              borderRadius: "10px",
+              border: "1px solid #dee2e6",
+              backgroundColor: "#ffffff",
+            }}
+          >
+            <table className="table table-bordered table-hover align-middle mb-0">
               <thead className="table-light">
                 <tr>
                   <th>#</th>
@@ -147,25 +156,27 @@ const OwnerInquiries = () => {
                       </span>
                     </td>
                     <td>
-                      <button
-                        className="btn btn-sm btn-outline-primary me-2"
-                        onClick={() => startEditing(inquiry)}
-                        disabled={["approved", "declined"].includes(inquiry.status?.toLowerCase())}
-                      >
-                        <i className="bi bi-check2-circle me-1"></i>Respond
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-warning me-2"
-                        onClick={() => handleEdit(inquiry)}
-                      >
-                        <i className="bi bi-pencil-square"></i>
-                      </button>
-                      <button
-                        className="btn btn-sm btn-outline-danger"
-                        onClick={() => handleDelete(inquiry._id)}
-                      >
-                        <i className="bi bi-trash"></i>
-                      </button>
+                      <div className="btn-group" role="group">
+                        <button
+                          className="btn btn-sm btn-outline-primary me-2"
+                          onClick={() => startEditing(inquiry)}
+                          disabled={["approved", "declined"].includes(inquiry.status?.toLowerCase())}
+                        >
+                          <i className="bi bi-check2-circle me-1"></i>Respond
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-warning me-2"
+                          onClick={() => handleEdit(inquiry)}
+                        >
+                          <i className="bi bi-pencil-square"></i>
+                        </button>
+                        <button
+                          className="btn btn-sm btn-outline-danger"
+                          onClick={() => handleDelete(inquiry._id)}
+                        >
+                          <i className="bi bi-trash"></i>
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -223,6 +234,39 @@ const OwnerInquiries = () => {
           </div>
         )}
       </div>
+
+      {/* Custom Scrollbar Styles */}
+      <style>{`
+        .table-responsive::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+          background: #3a506b;
+          border-radius: 10px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+          background: #1e2a38;
+        }
+
+        .btn-group .btn {
+          transition: all 0.2s ease-in-out;
+        }
+
+        .btn-group .btn:hover {
+          transform: scale(1.05);
+        }
+
+        .table th, .table td {
+          vertical-align: middle;
+        }
+      `}</style>
     </div>
   );
 };

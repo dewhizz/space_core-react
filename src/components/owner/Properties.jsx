@@ -47,9 +47,26 @@ const OwnerProperties = () => {
     fetchProperties();
   }, []);
 
-  const handleEdit = (property) => {
-    navigate("/owner-dashboard/properties/edit", { state: { property } });
+  const handleEdit = (propertyData) => {
+    navigate("/owner-dashboard/properties/edit", { state: { propertyData } });
   };
+
+    const handleDelete = async (id) => {
+      if (window.confirm("Delete this inquiry?")) {
+        try {
+          toast.warning("Deleting inquiry...");
+          const res = await axios.delete(
+            `https://space-core.onrender.com/api/properties/${id}`,
+            authHeader
+          );
+          toast.success(res.data.message);
+          fetchProperties();
+        } catch (error) {
+          toast.dismiss();
+          toast.error(error.response?.data?.message);
+        }
+      }
+    };
 
   return (
     <div
@@ -100,7 +117,15 @@ const OwnerProperties = () => {
           </h5>
         </div>
 
-        <div className="table-responsive">
+        <div
+          className="table-responsive"
+          style={{
+            maxHeight: "500px",
+            overflowY: "auto",
+            borderRadius: "10px",
+            border: "1px solid #dee2e6",
+          }}
+        >
           {loading ? (
             <div className="text-center py-5">
               <Spinner size={32} className="text-primary spin" />
@@ -116,7 +141,7 @@ const OwnerProperties = () => {
               <p className="mt-3 text-muted">No properties found!</p>
             </div>
           ) : (
-            <table className="table table-hover table-bordered align-middle">
+            <table className="table table-hover table-bordered align-middle mb-0">
               <thead className="table-light">
                 <tr>
                   <th>Photo</th>
@@ -170,7 +195,10 @@ const OwnerProperties = () => {
                         className="btn btn-sm btn-outline-primary"
                         onClick={() => handleEdit(prop)}
                       >
-                        <PencilSimple size={16} weight="bold" />Edit
+                        <PencilSimple size={16} weight="bold" /> Edit
+                      </button>
+                      <button className="btn btn-sm btn-outline-danger" onClick={() => handleDelete(prop._id)}>
+                        <i className="bi bi-trash-fill"></i>
                       </button>
                     </td>
                   </tr>
@@ -180,6 +208,36 @@ const OwnerProperties = () => {
           )}
         </div>
       </div>
+
+      {/* Custom Scrollbar Styles */}
+      <style>{`
+        .table-responsive::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        .table-responsive::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb {
+          background: #3a506b;
+          border-radius: 10px;
+        }
+
+        .table-responsive::-webkit-scrollbar-thumb:hover {
+          background: #1e2a38;
+        }
+
+        .spin {
+          animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 };

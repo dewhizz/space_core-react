@@ -17,7 +17,7 @@ const OwnerBookings = () => {
     try {
       toast.info("Loading bookings...");
       const res = await axios.get(
-        "https://space-core.onrender.com/api/booking/owner-bookings",
+        "https://space-core.onrender.com/api/bookings/owner-bookings",
         authHeader
       );
       setBookings(res.data);
@@ -100,18 +100,18 @@ const OwnerBookings = () => {
                       <button
                         className="btn btn-sm btn-success me-2"
                         onClick={() =>
-                          handleUpdateStatus(booking._id, "Approved")
+                          handleUpdateStatus(booking._id, "approved")
                         }
-                        disabled={booking.status === "Approved"}
+                        disabled={booking.status === "approved"}
                       >
                         Approve
                       </button>
                       <button
                         className="btn btn-sm btn-danger"
                         onClick={() =>
-                          handleUpdateStatus(booking._id, "Rejected")
+                          handleUpdateStatus(booking._id, "rejected")
                         }
-                        disabled={booking.status === "Rejected"}
+                        disabled={booking.status === "rejected"}
                       >
                         Reject
                       </button>

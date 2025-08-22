@@ -34,6 +34,7 @@ import OwnerInquiries from "./components/owner/OwnerInquires";
 import PropertyEdit from "./components/owner/forms/PropertyEdit";
 import OwnerBookings from "./components/owner/OwnerBookings";
 import OwnerProperties from "./components/owner/Properties";
+import OwnerDashboard from "./components/owner/OwnerDashBoard";
 
 
 
@@ -78,8 +79,9 @@ function App() {
               </ProtectedRoute>
             }
           >
+            <Route path="" element={<OwnerDashboard />} />
             <Route path="owner-inquires" element={<OwnerInquiries />} />
-
+            
             <Route path="properties" element={<OwnerProperties  />} />
             <Route path="properties/add" element={<PropertyAdd />} />
             <Route path="properties/edit" element={<PropertyEdit />} />

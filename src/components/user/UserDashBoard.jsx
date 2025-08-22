@@ -102,44 +102,58 @@ const UserDashboard = () => {
         {stats.recentInquiries.length === 0 ? (
           <p className="text-muted fst-italic">No recent inquiries found.</p>
         ) : (
-          <ul className="list-group shadow-sm rounded-4 overflow-hidden">
-            {stats.recentInquiries.map((inquiry, index) => (
-              <li
-                key={index}
-                className="list-group-item d-flex align-items-center gap-3"
-                style={{ backgroundColor: "#f4f7fa" }}
-              >
-                <img
-                  src={inquiry.propertyImage || "/placeholder.jpg"}
-                  alt="property"
-                  className="rounded"
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                    objectFit: "cover",
-                  }}
-                />
-                <div className="flex-grow-1">
-                  <strong>{inquiry.propertyTitle}</strong>
-                  <div className="text-secondary small">
-                    <ChatCircleText size={16} className="me-1" />
-                    {inquiry.message || "No message provided"}
+          <div
+            className="scrollable"
+            style={{
+              maxHeight: "300px",
+              overflowY: "auto",
+              borderRadius: "1rem",
+              border: "1px solid #dee2e6",
+            }}
+          >
+
+            <ul className="list-group shadow-sm rounded-4 overflow-hidden">
+              {stats.recentInquiries.map((inquiry, index) => (
+                <li
+                  key={index}
+                  className="list-group-item d-flex align-items-center gap-3"
+                  style={{ backgroundColor: "#f4f7fa" }}
+                >
+                  <img
+                    src={
+                      inquiry.property?.photo
+                        ? `https://space-core.onrender.com/${inquiry.property.photo}`
+                        : "/placeholder.jpg"
+                    }
+                    alt="property"
+                    className="rounded"
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <div className="flex-grow-1">
+                    <strong>{inquiry.propertyTitle}</strong>
+                    <div className="text-secondary small">
+                      <ChatCircleText size={16} className="me-1" />
+                      {inquiry.message || "No message provided"}
+                    </div>
                   </div>
-                </div>
-                <span
-                  className={`badge rounded-pill ${
-                    inquiry.status === "approved"
+                  <span
+                    className={`badge rounded-pill ${inquiry.status === "approved"
                       ? "bg-success"
                       : inquiry.status === "pending"
-                      ? "bg-warning text-dark"
-                      : "bg-secondary"
-                  }`}
-                >
-                  {inquiry.status}
-                </span>
-              </li>
-            ))}
-          </ul>
+                        ? "bg-warning text-dark"
+                        : "bg-secondary"
+                      }`}
+                  >
+                    {inquiry.status}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </section>
 
@@ -151,45 +165,59 @@ const UserDashboard = () => {
         {stats.recentBookings.length === 0 ? (
           <p className="text-muted fst-italic">No recent bookings found.</p>
         ) : (
-          <ul className="list-group shadow-sm rounded-4 overflow-hidden">
-            {stats.recentBookings.map((booking, index) => (
-              <li
-                key={index}
-                className="list-group-item d-flex align-items-center gap-3"
-                style={{ backgroundColor: "#f4f7fa" }}
-              >
-                <img
-                  src={booking.propertyImage || "/placeholder.jpg"}
-                  alt="property"
-                  className="rounded"
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                    objectFit: "cover",
-                  }}
-                />
-                <div className="flex-grow-1">
-                  <strong>{booking.propertyTitle}</strong>
-                  <div className="text-secondary small">
-                    <House size={16} className="me-1" />
-                    Start: {new Date(booking.startDate).toLocaleDateString()} | End:{" "}
-                    {new Date(booking.endDate).toLocaleDateString()}
+          <div
+            className="scrollable"
+            style={{
+              maxHeight: "300px",
+              overflowY: "auto",
+              borderRadius: "1rem",
+              border: "1px solid #dee2e6",
+            }}
+          >
+
+            <ul className="list-group shadow-sm rounded-4 overflow-hidden">
+              {stats.recentBookings.map((booking, index) => (
+                <li
+                  key={index}
+                  className="list-group-item d-flex align-items-center gap-3"
+                  style={{ backgroundColor: "#f4f7fa" }}
+                >
+                  <img
+                    src={
+                      booking.property?.photo
+                        ? `https://space-core.onrender.com/${booking.property.photo}`
+                        : "/placeholder.jpg"
+                    }
+                    alt="property"
+                    className="rounded"
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "cover",
+                    }}
+                  />
+                  <div className="flex-grow-1">
+                    <strong>{booking.propertyTitle}</strong>
+                    <div className="text-secondary small">
+                      <House size={16} className="me-1" />
+                      Start: {new Date(booking.startDate).toLocaleDateString()} | End:{" "}
+                      {new Date(booking.endDate).toLocaleDateString()}
+                    </div>
                   </div>
-                </div>
-                <span
-                  className={`badge rounded-pill ${
-                    booking.status === "confirmed"
+                  <span
+                    className={`badge rounded-pill ${booking.status === "confirmed"
                       ? "bg-success"
                       : booking.status === "pending"
-                      ? "bg-warning text-dark"
-                      : "bg-secondary"
-                  }`}
-                >
-                  {booking.status}
-                </span>
-              </li>
-            ))}
-          </ul>
+                        ? "bg-warning text-dark"
+                        : "bg-secondary"
+                      }`}
+                  >
+                    {booking.status}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </section>
 
@@ -206,6 +234,25 @@ const UserDashboard = () => {
         .hover-spin:hover {
           transform: rotate(8deg);
           transition: transform 0.3s ease;
+        }
+
+        /* Custom scrollbar */
+        div::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        div::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+
+        div::-webkit-scrollbar-thumb {
+          background: #3a506b;
+          border-radius: 10px;
+        }
+
+        div::-webkit-scrollbar-thumb:hover {
+          background: #1e2a38;
         }
       `}</style>
     </div>

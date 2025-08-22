@@ -69,14 +69,7 @@ const DashboardNavbar = () => {
                   zIndex: 999,
                 }}
               >
-                <div
-                  className="dropdown-item d-flex align-items-center py-2 px-3"
-                  style={{ cursor: "pointer" }}
-                  onClick={handleSwitchDashboard}
-                >
-                  <ArrowsLeftRight size={20} className="me-2" />
-                  Switch to Owner Dashboard
-                </div>
+                
                 <div
                   className="dropdown-item d-flex align-items-center py-2 px-3 text-danger"
                   style={{ cursor: "pointer" }}
